@@ -1,8 +1,10 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
+using GradeManagement.Service.Login;
 
 namespace GradeManagement.ViewModel;
 
@@ -43,5 +45,20 @@ public class MainViewModel
     {
         var pb = param! as PasswordBox;
         var password = pb!.Password;
+
+        var userType = _roleIndex switch
+        {
+            0 => Data.UserType.Student,
+            1 => Data.UserType.Teacher,
+            2 => Data.UserType.Admin,
+            _ => throw new ArgumentOutOfRangeException(nameof(_roleIndex), _roleIndex,
+                "No connection string for this user type")
+        };
+
+        var loginService = new LoginService(UserName, userType);
+
+        var user = loginService.Login(password);
+
+        MessageBox.Show(user == null ? "Login failed" : "Login success");
     }
 }

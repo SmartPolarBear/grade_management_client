@@ -17,7 +17,7 @@ public class LoginService
     {
         _userName = userName;
         _userType = userType;
-        _dbc = new GradeManagementContext(userType);
+        _dbc = new GradeManagementContext(UserType.Default); // use default because before login, no user are there
     }
 
     private User? LoginAdmin(string pwd)
