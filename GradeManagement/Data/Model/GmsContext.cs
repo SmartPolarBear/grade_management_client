@@ -17,15 +17,25 @@ public partial class GmsContext : DbContext
 
     public virtual DbSet<Admin> Admins { get; set; }
 
+    public virtual DbSet<AdminViewForStudent> AdminViewForStudents { get; set; }
+
+    public virtual DbSet<AdminViewForTeacher> AdminViewForTeachers { get; set; }
+
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Sc> Scs { get; set; }
 
-    public virtual DbSet<St> Sts { get; set; }
+    public virtual DbSet<Scaudit> Scaudits { get; set; }
+
+    public virtual DbSet<Stc> Stcs { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
+    public virtual DbSet<StudentViewForTeacher> StudentViewForTeachers { get; set; }
+
     public virtual DbSet<Teacher> Teachers { get; set; }
+
+    public virtual DbSet<TeacherViewForStudent> TeacherViewForStudents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -36,6 +46,18 @@ public partial class GmsContext : DbContext
         modelBuilder.Entity<Admin>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Admin__3214EC27CBF5BD14");
+
+            entity.Property(e => e.Id).IsFixedLength();
+        });
+
+        modelBuilder.Entity<AdminViewForStudent>(entity =>
+        {
+            entity.ToView("AdminViewForStudent");
+        });
+
+        modelBuilder.Entity<AdminViewForTeacher>(entity =>
+        {
+            entity.ToView("AdminViewForTeacher");
 
             entity.Property(e => e.Id).IsFixedLength();
         });
@@ -51,6 +73,12 @@ public partial class GmsContext : DbContext
         {
             entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD614A559E46");
 
+            entity.ToTable("SC", tb =>
+                {
+                    tb.HasTrigger("SCAuditTrigger");
+                    tb.HasTrigger("SCAuditTriggerDel");
+                });
+
             entity.Property(e => e.StudentId).IsFixedLength();
             entity.Property(e => e.CourseId).IsFixedLength();
 
@@ -63,25 +91,54 @@ public partial class GmsContext : DbContext
                 .HasConstraintName("FK__SC__StudentID__4222D4EF");
         });
 
-        modelBuilder.Entity<St>(entity =>
+        modelBuilder.Entity<Scaudit>(entity =>
         {
-            entity.HasKey(e => new { e.TeacherId, e.StudentId }).HasName("PK__ST__6EDE0BE3B3237FA8");
+            entity.HasKey(e => e.Id).HasName("PK__SCAudit__3214EC27450AE732");
+
+            entity.Property(e => e.CourseId).IsFixedLength();
+            entity.Property(e => e.Date).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.StudentId).IsFixedLength();
+
+            entity.HasOne(d => d.Course).WithMany(p => p.Scaudits)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__SCAudit__CourseI__6754599E");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.Scaudits)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__SCAudit__Student__66603565");
+        });
+
+        modelBuilder.Entity<Stc>(entity =>
+        {
+            entity.HasKey(e => new { e.TeacherId, e.StudentId }).HasName("PK__STC__6EDE0BE3FD63DA1F");
 
             entity.Property(e => e.TeacherId).IsFixedLength();
             entity.Property(e => e.StudentId).IsFixedLength();
+            entity.Property(e => e.CourseId).IsFixedLength();
 
-            entity.HasOne(d => d.Student).WithMany(p => p.Sts)
+            entity.HasOne(d => d.Course).WithMany(p => p.Stcs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ST__StudentID__52593CB8");
+                .HasConstraintName("FK__STC__CourseID__74AE54BC");
 
-            entity.HasOne(d => d.Teacher).WithMany(p => p.Sts)
+            entity.HasOne(d => d.Student).WithMany(p => p.Stcs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ST__TeacherID__5165187F");
+                .HasConstraintName("FK__STC__StudentID__73BA3083");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.Stcs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__STC__TeacherID__72C60C4A");
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Student__3214EC27084EFF5D");
+
+            entity.Property(e => e.Id).IsFixedLength();
+        });
+
+        modelBuilder.Entity<StudentViewForTeacher>(entity =>
+        {
+            entity.ToView("StudentViewForTeacher");
 
             entity.Property(e => e.Id).IsFixedLength();
         });
@@ -118,6 +175,11 @@ public partial class GmsContext : DbContext
                             .IsFixedLength()
                             .HasColumnName("CourseID");
                     });
+        });
+
+        modelBuilder.Entity<TeacherViewForStudent>(entity =>
+        {
+            entity.ToView("TeacherViewForStudent");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -24,7 +24,13 @@ public partial class Course
     public byte GradingMethod { get; set; }
 
     [InverseProperty("Course")]
+    public virtual ICollection<Scaudit> Scaudits { get; set; } = new List<Scaudit>();
+
+    [InverseProperty("Course")]
     public virtual ICollection<Sc> Scs { get; set; } = new List<Sc>();
+
+    [InverseProperty("Course")]
+    public virtual ICollection<Stc> Stcs { get; set; } = new List<Stc>();
 
     [ForeignKey("CourseId")]
     [InverseProperty("Courses")]

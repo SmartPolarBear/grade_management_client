@@ -32,8 +32,11 @@ public partial class Student
     public string Email { get; set; } = null!;
 
     [InverseProperty("Student")]
+    public virtual ICollection<Scaudit> Scaudits { get; set; } = new List<Scaudit>();
+
+    [InverseProperty("Student")]
     public virtual ICollection<Sc> Scs { get; set; } = new List<Sc>();
 
     [InverseProperty("Student")]
-    public virtual ICollection<St> Sts { get; set; } = new List<St>();
+    public virtual ICollection<Stc> Stcs { get; set; } = new List<Stc>();
 }

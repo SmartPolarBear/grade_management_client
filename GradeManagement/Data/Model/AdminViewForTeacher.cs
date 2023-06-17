@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GradeManagement.Data.Model;
 
-[Table("Teacher")]
-public partial class Teacher
+[Keyless]
+public partial class AdminViewForTeacher
 {
-    [Key]
     [Column("ID")]
     [StringLength(14)]
     [Unicode(false)]
@@ -21,16 +20,5 @@ public partial class Teacher
 
     [StringLength(30)]
     [Unicode(false)]
-    public string Password { get; set; } = null!;
-
-    [StringLength(30)]
-    [Unicode(false)]
     public string Email { get; set; } = null!;
-
-    [InverseProperty("Teacher")]
-    public virtual ICollection<Stc> Stcs { get; set; } = new List<Stc>();
-
-    [ForeignKey("TeacherId")]
-    [InverseProperty("Teachers")]
-    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 }
