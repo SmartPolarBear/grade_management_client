@@ -9,7 +9,7 @@ namespace GradeManagement.ViewModel;
 public class MainViewModel
     : ViewModelBase
 {
-    MainViewModel()
+    public MainViewModel()
     {
         LoginCommand = new DelegateCommand(Login, _ => !string.IsNullOrEmpty(UserName));
     }
