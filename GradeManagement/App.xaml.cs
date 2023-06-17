@@ -14,12 +14,12 @@ namespace GradeManagement
     /// </summary>
     public partial class App : Application
     {
-        public static IConfiguration Config { get; private set; }
+        public static IConfiguration Config => new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, true)
+            .Build();
+
         public App()
         {
-            Config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false, true)
-                .Build();
         }
     }
 }

@@ -1,10 +1,11 @@
 using System;
 using System.Windows;
+using GradeManagement.Data;
 using Microsoft.Extensions.Configuration;
 
-namespace GradeManagement.Data;
+namespace GradeManagement.Utils;
 
-public static class LoginConnection
+public static class UserConnectionString
 {
     private static string? FullConnectionString(this string key)
         => $"{App.Config.GetConnectionString("Source")}{App.Config.GetConnectionString(key)}";

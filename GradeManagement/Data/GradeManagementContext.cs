@@ -1,4 +1,5 @@
 using GradeManagement.Data.Model;
+using GradeManagement.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace GradeManagement.Data;
