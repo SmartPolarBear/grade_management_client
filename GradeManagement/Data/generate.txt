@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold "Data Source=localhost,1433;Initial Catalog=gms;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Data\Model\

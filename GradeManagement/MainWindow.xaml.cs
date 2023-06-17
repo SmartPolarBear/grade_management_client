@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GradeManagement.Data;
 using GradeManagement.ViewModel;
+using Microsoft.Extensions.Configuration;
 
 namespace GradeManagement
 {
@@ -24,6 +26,7 @@ namespace GradeManagement
         public MainWindow()
         {
             InitializeComponent();
+            // MessageBox.Show(UserType.Admin.ConnectionString());
         }
 
         private void ExitButton_OnClick(object sender, RoutedEventArgs e)
