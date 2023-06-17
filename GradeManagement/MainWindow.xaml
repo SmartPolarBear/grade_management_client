@@ -4,25 +4,44 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeManagement"
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel"
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
-        Title="Log In" Height="280" Width="280">
-    <Grid>
+        Title="Log In" Height="240" Width="280">
+    <Window.DataContext>
+        <vm:MainViewModel></vm:MainViewModel>
+    </Window.DataContext>
+
+    <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <Label>Username</Label>
-            <TextBox Margin="0,4" MinWidth="128" MaxWidth="256" MaxLines="1"></TextBox>
+            <TextBox Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=UserName,Mode=TwoWay}" MinWidth="128"
+                     MaxWidth="256" MaxLines="1">
+            </TextBox>
+            <ComboBox SelectedIndex="{Binding Path=RoleIndex,Mode=TwoWay}" Margin="0,4">
+                <ComboBoxItem>Student</ComboBoxItem>
+                <ComboBoxItem>Teacher</ComboBoxItem>
+                <ComboBoxItem>Administrator</ComboBoxItem>
+            </ComboBox>
             <Label>Password</Label>
-            <PasswordBox Margin="0,4" MinWidth="128" MaxWidth="256" ></PasswordBox>
+            <PasswordBox Name="UserPassword" MinWidth="128" MaxWidth="256"></PasswordBox>
         </StackPanel>
-        <StackPanel 
+        <StackPanel
             Grid.Row="1"
+            HorizontalAlignment="Center"
             Orientation="Horizontal"
             Margin="4">
-            <Button Content="Login" Width="64" Margin="4,0"></Button>
+            <Button Content="Login"
+                    Width="64"
+                    Margin="4,0"
+                    Command="{Binding Path=LoginCommand}"
+                    CommandParameter="{Binding ElementName=UserPassword}"
+                    Name="LoginButton">
+            </Button>
             <Button Content="Exit" Width="64" Margin="4,0" Name="ExitButton" Click="ExitButton_OnClick"></Button>
         </StackPanel>
     </Grid>
