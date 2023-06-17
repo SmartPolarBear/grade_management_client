@@ -59,6 +59,7 @@ public class MainViewModel
 
         var user = loginService.Login(password);
 
+        // TODO: error management and navigation
         MessageBox.Show(user == null ? "Login failed" : "Login success");
     }
 }
