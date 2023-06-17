@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:GradeManagement"
         xmlns:vm="clr-namespace:GradeManagement.ViewModel"
         mc:Ignorable="d"
-        WindowStyle="ToolWindow"
-        Title="Log In" Height="240" Width="280">
+        ResizeMode="NoResize"
+        Title="Log In" Height="240" Width="280"
+        WindowStartupLocation="CenterScreen">
+    
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
@@ -40,7 +42,8 @@
                     Margin="4,0"
                     Command="{Binding Path=LoginCommand}"
                     CommandParameter="{Binding ElementName=UserPassword}"
-                    Name="LoginButton">
+                    Name="LoginButton"
+                    IsDefault="True">
             </Button>
             <Button Content="Exit" Width="64" Margin="4,0" Name="ExitButton" Click="ExitButton_OnClick"></Button>
         </StackPanel>

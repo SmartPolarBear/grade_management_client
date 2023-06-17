@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
+using GradeManagement.Data.Base;
 using GradeManagement.Service.Login;
 
 namespace GradeManagement.ViewModel;
@@ -59,7 +60,28 @@ public class MainViewModel
 
         var user = loginService.Login(password);
 
-        // TODO: error management and navigation
-        MessageBox.Show(user == null ? "Login failed" : "Login success");
+        if (user == null)
+        {
+            LoginFailed?.Invoke(this, new LoginFailedEventArgs());
+        }
+        else
+        {
+            LoginSucceeded?.Invoke(this, new LoginSucceededEventArgs() { User = user });
+        }
     }
+
+
+    public event EventHandler<LoginFailedEventArgs>? LoginFailed;
+    public event EventHandler<LoginSucceededEventArgs>? LoginSucceeded;
+}
+
+public class LoginSucceededEventArgs
+    : EventArgs
+{
+    public User? User { get; internal set; }
+}
+
+public class LoginFailedEventArgs
+    : EventArgs
+{
 }

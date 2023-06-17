@@ -37,67 +37,28 @@ public partial class GmsContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Admin__3214EC27CBF5BD14");
 
-            entity.ToTable("Admin");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ID");
-            entity.Property(e => e.Email)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(10)
-                .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+            entity.Property(e => e.Id).IsFixedLength();
         });
 
         modelBuilder.Entity<Course>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Course__3214EC2734ABCF1C");
 
-            entity.ToTable("Course");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ID");
-            entity.Property(e => e.Name)
-                .HasMaxLength(10)
-                .IsUnicode(false);
-            entity.Property(e => e.Teacher)
-                .HasMaxLength(10)
-                .IsUnicode(false);
+            entity.Property(e => e.Id).IsFixedLength();
         });
 
         modelBuilder.Entity<Sc>(entity =>
         {
             entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD614A559E46");
 
-            entity.ToTable("SC");
-
-            entity.Property(e => e.StudentId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("StudentID");
-            entity.Property(e => e.CourseId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("CourseID");
+            entity.Property(e => e.StudentId).IsFixedLength();
+            entity.Property(e => e.CourseId).IsFixedLength();
 
             entity.HasOne(d => d.Course).WithMany(p => p.Scs)
-                .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SC__CourseID__4316F928");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Scs)
-                .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SC__StudentID__4222D4EF");
         });
@@ -106,26 +67,14 @@ public partial class GmsContext : DbContext
         {
             entity.HasKey(e => new { e.TeacherId, e.StudentId }).HasName("PK__ST__6EDE0BE3B3237FA8");
 
-            entity.ToTable("ST");
-
-            entity.Property(e => e.TeacherId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("TeacherID");
-            entity.Property(e => e.StudentId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("StudentID");
+            entity.Property(e => e.TeacherId).IsFixedLength();
+            entity.Property(e => e.StudentId).IsFixedLength();
 
             entity.HasOne(d => d.Student).WithMany(p => p.Sts)
-                .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ST__StudentID__52593CB8");
 
             entity.HasOne(d => d.Teacher).WithMany(p => p.Sts)
-                .HasForeignKey(d => d.TeacherId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ST__TeacherID__5165187F");
         });
@@ -134,44 +83,14 @@ public partial class GmsContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Student__3214EC27084EFF5D");
 
-            entity.ToTable("Student");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ID");
-            entity.Property(e => e.Email)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(10)
-                .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+            entity.Property(e => e.Id).IsFixedLength();
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Teacher__3214EC2778D9F0DE");
 
-            entity.ToTable("Teacher");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("ID");
-            entity.Property(e => e.Email)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.Name)
-                .HasMaxLength(10)
-                .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+            entity.Property(e => e.Id).IsFixedLength();
 
             entity.HasMany(d => d.Courses).WithMany(p => p.Teachers)
                 .UsingEntity<Dictionary<string, object>>(

@@ -47,4 +47,5 @@ public class LoginService
             _ => throw new ArgumentOutOfRangeException(nameof(_userType), _userType,
                 "No login method for this user type")
         };
+
 }
