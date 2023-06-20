@@ -4,9 +4,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GradeManagement.View.Teacher"
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel.Teacher"
+        xmlns:converters="clr-namespace:GradeManagement.Utils.Converter"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:TeacherMainViewModel, IsDesignTimeCreatable=False}"
         Title="TeacherMainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+
+    <Window.Resources>
+        <converters:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Action">
+                <MenuItem Header="Refresh" Command="{Binding Path=RefreshCommand}"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="ExitMenuItem_OnClick" Header="Exit"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=CourseCount}"></TextBlock>
+                    <TextBlock Text=" Courses"></TextBlock>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="4,0">
+                    <TextBlock Text="Name:"></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Name}"></TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="4,0">
+                    <TextBlock Text="ID:"></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Id}"></TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="4,0">
+                    <TextBlock Text="E-Email:"></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Email}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <DataGrid Grid.Row="1"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      ItemsSource="{Binding Courses}"
+                      AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridComboBoxColumn IsReadOnly="True" Header="Has Graded?" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
+                    <DataGridTextColumn Header="Grading Method"
+                                        Binding="{Binding GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                    <DataGridTextColumn Header="Average Scores" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </Window>

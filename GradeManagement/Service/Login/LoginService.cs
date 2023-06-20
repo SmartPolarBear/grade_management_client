@@ -7,7 +7,7 @@ using Microsoft.Identity.Client;
 
 namespace GradeManagement.Service.Login;
 
-public class LoginService
+public sealed class LoginService
 {
     private readonly string _userName;
     private readonly UserType _userType;

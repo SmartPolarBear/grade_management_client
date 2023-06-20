@@ -15,4 +15,12 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         return true;
     }
+
+    protected void NotifyAllPropertiesChanged<T>() where T : ViewModelBase
+    {
+        foreach (var prop in typeof(T).GetProperties())
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop.Name));
+        }
+    }
 }
