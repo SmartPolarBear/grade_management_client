@@ -15,8 +15,6 @@ using Teacher = Data.Model.Teacher;
 using Course = Data.Model.Course;
 using CourseRecord = Data.Course;
 
-public record CourseDisplayItem(string Id, Course Data, GradingStatus Status, double Average);
-
 public class TeacherMainViewModel
     : ViewModelBase
 {
@@ -36,10 +34,9 @@ public class TeacherMainViewModel
 
     public Teacher TeacherData { get; }
 
-    public IEnumerable<CourseDisplayItem> Courses =>
+    public IEnumerable<Course> Courses =>
         from c in _service.TaughtCourses
-        join cg in _service.CourseGrading on c.Id equals cg.CourseId
-        select new CourseDisplayItem(c.Id, c.Data as Course, cg.Status, cg.Average);
+        select c.Data as Course;
 
     public int CourseCount => Courses.Count();
 

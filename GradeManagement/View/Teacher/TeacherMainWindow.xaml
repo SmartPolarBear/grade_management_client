@@ -25,6 +25,37 @@
                 <MenuItem Click="ExitMenuItem_OnClick" Header="Exit"></MenuItem>
             </MenuItem>
         </Menu>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Content="Modify"></Button>
+                
+                <Separator/>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    Margin="4,0"
+                    VerticalAlignment="Center">
+                    <TextBlock Text="Name: "></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Name}"></TextBlock>
+                </StackPanel>
+
+                <StackPanel 
+                    Orientation="Horizontal" 
+                    Margin="4,0"
+                    VerticalAlignment="Center">
+                    <TextBlock Text="ID: "></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Id}"></TextBlock>
+                </StackPanel>
+
+                <StackPanel 
+                    Orientation="Horizontal"
+                    Margin="4,0"
+                    VerticalAlignment="Center">
+                    <TextBlock Text="E-mail: "></TextBlock>
+                    <TextBlock Text="{Binding Path=TeacherData.Email}"></TextBlock>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
@@ -35,41 +66,19 @@
         </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="32"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Margin="4,0">
-                    <TextBlock Text="Name:"></TextBlock>
-                    <TextBlock Text="{Binding Path=TeacherData.Name}"></TextBlock>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="4,0">
-                    <TextBlock Text="ID:"></TextBlock>
-                    <TextBlock Text="{Binding Path=TeacherData.Id}"></TextBlock>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="4,0">
-                    <TextBlock Text="E-Email:"></TextBlock>
-                    <TextBlock Text="{Binding Path=TeacherData.Email}"></TextBlock>
-                </StackPanel>
-            </StackPanel>
-            <DataGrid Grid.Row="1"
-                      IsReadOnly="True"
-                      SelectionMode="Single"
-                      ItemsSource="{Binding Courses}"
-                      AutoGenerateColumns="False">
+            <DataGrid
+                IsReadOnly="True"
+                SelectionMode="Single"
+                ItemsSource="{Binding Courses}"
+                AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn IsReadOnly="True" Header="Has Graded?"
-                                            IsThreeState="True"
-                                            Binding="{Binding Status}" />
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Data.Name}" />
-                    <DataGridTextColumn Header="Credit" Binding="{Binding Data.Credit}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
                     <DataGridTextColumn Header="Grading Method"
-                                        Binding="{Binding Data.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
-                    <DataGridTextColumn Header="Average Scores"
-                                        Binding="{Binding Average}" />
+                                        Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

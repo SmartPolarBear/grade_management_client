@@ -1,0 +1,39 @@
+<Window x:Class="GradeManagement.View.Teacher.ChangeAccountInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:GradeManagement.View.Teacher"
+        mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Change Account Information" Height="200" Width="200">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <Separator Margin="8"></Separator>
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Margin="4">Change Password</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="4">OK</Button>
+                    <Button Margin="4">Cancel</Button>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel Margin="4">
+            <TextBlock>Name:</TextBlock>
+            <TextBox></TextBox>
+            
+            <TextBlock>ID:</TextBlock>
+            <TextBox IsReadOnly="True"></TextBox>
+            
+            <TextBlock>E-mail:</TextBlock>
+            <TextBox></TextBox>
+
+        </StackPanel>
+    </DockPanel>
+</Window>
