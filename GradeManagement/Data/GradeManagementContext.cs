@@ -12,7 +12,7 @@ public enum UserType
     Admin
 }
 
-public class GradeManagementContext
+public sealed class GradeManagementContext
     : GmsContext
 {
     private readonly UserType? _userType;
@@ -31,7 +31,9 @@ public class GradeManagementContext
     {
         if (_userType != null)
         {
-            optionsBuilder.UseSqlServer(_userType.ConnectionString());
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(_userType.ConnectionString());
         }
         else
         {

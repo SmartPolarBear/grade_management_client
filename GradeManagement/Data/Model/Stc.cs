@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GradeManagement.Data.Model;
 
-[PrimaryKey("TeacherId", "StudentId")]
+[PrimaryKey("TeacherId", "StudentId", "CourseId")]
 [Table("STC")]
 public partial class Stc
 {
@@ -22,6 +22,7 @@ public partial class Stc
     [Unicode(false)]
     public string TeacherId { get; set; } = null!;
 
+    [Key]
     [Column("CourseID")]
     [StringLength(14)]
     [Unicode(false)]

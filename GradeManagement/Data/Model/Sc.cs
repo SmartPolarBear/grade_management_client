@@ -22,9 +22,9 @@ public partial class Sc
     [Unicode(false)]
     public string CourseId { get; set; } = null!;
 
-    public byte Score { get; set; }
+    public byte? Score { get; set; }
 
-    public byte Rating { get; set; }
+    public byte? Rating { get; set; }
 
     [ForeignKey("CourseId")]
     [InverseProperty("Scs")]

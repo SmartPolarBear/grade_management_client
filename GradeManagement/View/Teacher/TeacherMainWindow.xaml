@@ -19,6 +19,9 @@
             <MenuItem Header="Action">
                 <MenuItem Header="Refresh" Command="{Binding Path=RefreshCommand}"></MenuItem>
                 <Separator></Separator>
+                <MenuItem Header="Modify Account"></MenuItem>
+                <MenuItem Header="Change Password"></MenuItem>
+                <Separator></Separator>
                 <MenuItem Click="ExitMenuItem_OnClick" Header="Exit"></MenuItem>
             </MenuItem>
         </Menu>
@@ -57,13 +60,16 @@
                       ItemsSource="{Binding Courses}"
                       AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridComboBoxColumn IsReadOnly="True" Header="Has Graded?" />
+                    <DataGridCheckBoxColumn IsReadOnly="True" Header="Has Graded?"
+                                            IsThreeState="True"
+                                            Binding="{Binding Status}" />
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Data.Name}" />
+                    <DataGridTextColumn Header="Credit" Binding="{Binding Data.Credit}" />
                     <DataGridTextColumn Header="Grading Method"
-                                        Binding="{Binding GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
-                    <DataGridTextColumn Header="Average Scores" />
+                                        Binding="{Binding Data.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                    <DataGridTextColumn Header="Average Scores"
+                                        Binding="{Binding Average}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

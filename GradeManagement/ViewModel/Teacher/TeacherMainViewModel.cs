@@ -15,28 +15,31 @@ using Teacher = Data.Model.Teacher;
 using Course = Data.Model.Course;
 using CourseRecord = Data.Course;
 
+public record CourseDisplayItem(string Id, Course Data, GradingStatus Status, double Average);
+
 public class TeacherMainViewModel
     : ViewModelBase
 {
-    private readonly Teacher _teacher;
     private TeacherService _service;
 
     public TeacherMainViewModel(TeacherUser teacher)
     {
-        _teacher = (teacher.Data as Teacher)!;
-        _service = new TeacherService(_teacher);
+        TeacherData = (teacher.Data as Teacher)!;
+        _service = new TeacherService(TeacherData);
     }
 
     private void RefreshData()
     {
-        _service = new TeacherService(_teacher);
+        _service = new TeacherService(TeacherData);
         NotifyAllPropertiesChanged<TeacherMainViewModel>();
     }
 
-    public Teacher TeacherData => _teacher;
+    public Teacher TeacherData { get; }
 
-    public IEnumerable<Course> Courses =>
-        from c in _service.TaughtCourses select c.Data as Course;
+    public IEnumerable<CourseDisplayItem> Courses =>
+        from c in _service.TaughtCourses
+        join cg in _service.CourseGrading on c.Id equals cg.CourseId
+        select new CourseDisplayItem(c.Id, c.Data as Course, cg.Status, cg.Average);
 
     public int CourseCount => Courses.Count();
 

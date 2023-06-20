@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
+using Microsoft.EntityFrameworkCore;
 using Course = GradeManagement.Data.Model.Course;
 using CourseRecord = GradeManagement.Data.Course;
 
 namespace GradeManagement.Service.Login;
+
+public enum GradingStatus
+{
+    None,
+    Partial,
+    All
+}
 
 public sealed class TeacherService
 {
@@ -20,21 +28,20 @@ public sealed class TeacherService
     }
 
     public IEnumerable<CourseRecord> TaughtCourses =>
-        from c in _dbc.Courses
-        where c.Teachers.Contains(_teacher)
+        from c in _teacher.Courses
         select new CourseRecord(c.Id, c);
 
-    public IEnumerable AverageScores =>
-        from stcsc in (
-            from stc in _dbc.Stcs
-            where stc.Teacher.Id == _teacher.Id
-            join sc in _dbc.Scs on
-                new { Sno = stc.Student.Id, Cno = stc.Course.Id }
-                equals
-                new { Sno = sc.Student.Id, Cno = sc.Course.Id }
-            select new { stc, sc.Score }
-        )
-        group stcsc by stcsc.stc.Course.Id
+    public IEnumerable<(string CourseId, GradingStatus Status, double Average)> CourseGrading =>
+        from stc in _teacher.Stcs
+        join sc in _dbc.Scs on stc.CourseId equals sc.CourseId into stcsc
+        from stg in stcsc.DefaultIfEmpty()
+        group stg by stg.CourseId
         into g
-        select new { CourseId = g.Key, Avg = g.Average(stcsc => stcsc.Score) };
+        select (g.Key,
+            g.Count(i => i.Score != null) == _teacher.Stcs.Count
+                ? GradingStatus.All
+                : g.Count(i => i.Score != null) == 0
+                    ? GradingStatus.None
+                    : GradingStatus.Partial,
+            g.Average(i => i.Score ?? 0));
 }
