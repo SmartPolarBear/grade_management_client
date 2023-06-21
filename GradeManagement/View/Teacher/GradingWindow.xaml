@@ -6,8 +6,15 @@
         xmlns:vm="clr-namespace:GradeManagement.ViewModel.Teacher"
         d:DataContext="{d:DesignInstance Type=vm:GradingViewModel, IsDesignTimeCreatable=False}"
         xmlns:local="clr-namespace:GradeManagement.View.Teacher"
+        xmlns:converter="clr-namespace:GradeManagement.Utils.Converter"
         mc:Ignorable="d"
-        Title="GradingWindow" Height="450" Width="800">
+        Title="{Binding WindowTitle}" Height="450" Width="800">
+
+    <Window.Resources>
+        <converter:NullToStringConverter x:Key="NullToStringConverter"></converter:NullToStringConverter>
+        <local:GradingMethodVisibilityConverter x:Key="GradingMethodVisibilityConverter"></local:GradingMethodVisibilityConverter>
+    </Window.Resources>
+
     <DockPanel>
         <Menu
             DockPanel.Dock="Top">
@@ -27,8 +34,8 @@
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.25*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <ScrollViewer>
                 <StackPanel>
@@ -38,38 +45,72 @@
                               IsEnabled="True">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="4">
-                                <TextBlock Text="ID: "/>
+                                <TextBlock Text="ID: " />
                                 <TextBlock Text="{Binding CourseData.Id}" />
                             </StackPanel>
-                            
-                            <StackPanel  Margin="4">
-                                <TextBlock Text="Name: "/>
-                                <TextBox 
+
+                            <StackPanel Margin="4">
+                                <TextBlock Text="Name: " />
+                                <TextBox
                                     MaxLines="4"
                                     MinLines="1"
                                     TextWrapping="Wrap"
                                     IsReadOnly="False"
                                     Text="{Binding CourseData.Name}" />
                             </StackPanel>
-                            
+
                             <StackPanel Orientation="Horizontal" Margin="4">
-                                <TextBlock Text="Credit: "/>
+                                <TextBlock Text="Credit: " />
                                 <TextBlock Text="{Binding CourseData.Credit}" />
                             </StackPanel>
-                            
+
                             <Separator Margin="4"></Separator>
-                            
+
                             <StackPanel Orientation="Horizontal" Margin="4">
                                 <TextBlock>Total Students: </TextBlock>
-                                <TextBlock Text="{Binding CourseData.Stcs.Count}" />
+                                <TextBlock Text="{Binding StudentCount}" />
+                            </StackPanel>
+                            <StackPanel Margin="4">
+                                <TextBlock> Graded Students: </TextBlock>
+                                <TextBox
+                                    IsReadOnly="True"
+                                    Text="{Binding GradedStudentCount, Mode=OneWay}" />
+                            </StackPanel>
+                            <StackPanel Margin="4">
+                                <TextBlock> Ungraded Students: </TextBlock>
+                                <TextBox
+                                    IsReadOnly="True"
+                                    Text="{Binding UngradedStudentCount, Mode=OneWay}" />
                             </StackPanel>
                         </StackPanel>
                     </Expander>
+
                     <Expander Header="Grade Composition"
                               ExpandDirection="Down"
-                              IsEnabled="True">
+                              IsEnabled="True"
+                              Visibility="{Binding CourseData.GradingMethod, Converter={StaticResource GradingMethodVisibilityConverter}}"
+                              IsExpanded="True">
                         <StackPanel>
-                            <TextBlock>AAA</TextBlock>
+                            <TextBlock Margin="4">Grading Parts: </TextBlock>
+                            <ListView
+                                MinHeight="64"
+                                Margin="4">
+
+                            </ListView>
+                            <Button Margin="4" Content="Edit"></Button>                            
+                        </StackPanel>
+                    </Expander>
+
+                    <Expander Header="Grade Composition"
+                              ExpandDirection="Down"
+                              IsEnabled="True"
+                              Visibility="{Binding CourseData.GradingMethod, Converter={StaticResource GradingMethodVisibilityConverter},ConverterParameter=0}">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="4"
+                                TextWrapping="Wrap">
+                                Grade composition is only available for the 100-mark system.
+                            </TextBlock>
                         </StackPanel>
                     </Expander>
                 </StackPanel>
@@ -77,11 +118,14 @@
             <DataGrid Grid.Column="1"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
+                      ItemsSource="{Binding Students}"
                       SelectionMode="Single">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Name"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Grade"></DataGridTextColumn>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Student.Id}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Student.Name}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Grade"
+                                        Binding="{Binding Grade,Converter={StaticResource NullToStringConverter},ConverterParameter=Not Graded Yet}">
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

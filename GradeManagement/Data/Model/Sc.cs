@@ -22,7 +22,8 @@ public partial class Sc
     [Unicode(false)]
     public string CourseId { get; set; } = null!;
 
-    public byte? Score { get; set; }
+    [Column(TypeName = "decimal(2, 0)")]
+    public decimal Score { get; set; }
 
     public byte? Rating { get; set; }
 

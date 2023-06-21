@@ -28,6 +28,9 @@
                 <MenuItem Header="_Modify Account"></MenuItem>
                 <MenuItem Header="_Change Password" Command="{Binding ChangePasswordCommand}"></MenuItem>
             </MenuItem>
+            <MenuItem Header="_Students">
+                <MenuItem Header="_List All Students"></MenuItem>
+            </MenuItem>
         </Menu>
         <ToolBarTray
             DockPanel.Dock="Top">

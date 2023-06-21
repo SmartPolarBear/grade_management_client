@@ -26,9 +26,11 @@ public partial class Scaudit
     [Unicode(false)]
     public string CourseId { get; set; } = null!;
 
-    public byte OldScore { get; set; }
+    [Column(TypeName = "decimal(2, 0)")]
+    public decimal OldScore { get; set; }
 
-    public byte? NewScore { get; set; }
+    [Column(TypeName = "decimal(2, 0)")]
+    public decimal? NewScore { get; set; }
 
     [ForeignKey("CourseId")]
     [InverseProperty("Scaudits")]

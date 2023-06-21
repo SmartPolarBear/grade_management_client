@@ -28,7 +28,7 @@ public partial class Stc
     [Unicode(false)]
     public string CourseId { get; set; } = null!;
 
-    public byte Rating { get; set; }
+    public byte? Rating { get; set; }
 
     [ForeignKey("CourseId")]
     [InverseProperty("Stcs")]

@@ -71,23 +71,23 @@ public partial class GmsContext : DbContext
 
         modelBuilder.Entity<Sc>(entity =>
         {
-            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD61587EA494");
+            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD6170E73699");
 
             entity.Property(e => e.StudentId).IsFixedLength();
             entity.Property(e => e.CourseId).IsFixedLength();
 
             entity.HasOne(d => d.Course).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__CourseID__03F0984C");
+                .HasConstraintName("FK__SC__CourseID__160F4887");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__StudentID__02FC7413");
+                .HasConstraintName("FK__SC__StudentID__151B244E");
         });
 
         modelBuilder.Entity<Scaudit>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SCAudit__3214EC27450AE732");
+            entity.HasKey(e => e.Id).HasName("PK__SCAudit__3214EC27F8B0D7AC");
 
             entity.Property(e => e.CourseId).IsFixedLength();
             entity.Property(e => e.Date).HasDefaultValueSql("(getdate())");
@@ -95,16 +95,16 @@ public partial class GmsContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.Scaudits)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SCAudit__CourseI__6754599E");
+                .HasConstraintName("FK__SCAudit__CourseI__1CBC4616");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Scaudits)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SCAudit__Student__66603565");
+                .HasConstraintName("FK__SCAudit__Student__1BC821DD");
         });
 
         modelBuilder.Entity<Stc>(entity =>
         {
-            entity.HasKey(e => new { e.TeacherId, e.StudentId, e.CourseId }).HasName("PK__STC__E8172692224D076E");
+            entity.HasKey(e => new { e.TeacherId, e.StudentId, e.CourseId }).HasName("PK__STC__E81726923AEDB599");
 
             entity.Property(e => e.TeacherId).IsFixedLength();
             entity.Property(e => e.StudentId).IsFixedLength();
@@ -112,15 +112,15 @@ public partial class GmsContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.Stcs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__STC__CourseID__797309D9");
+                .HasConstraintName("FK__STC__CourseID__0A9D95DB");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Stcs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__STC__StudentID__787EE5A0");
+                .HasConstraintName("FK__STC__StudentID__09A971A2");
 
             entity.HasOne(d => d.Teacher).WithMany(p => p.Stcs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__STC__TeacherID__778AC167");
+                .HasConstraintName("FK__STC__TeacherID__08B54D69");
         });
 
         modelBuilder.Entity<Student>(entity =>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
+using Student = GradeManagement.Data.Model.Student;
 
 namespace GradeManagement.Service.Teacher;
 
@@ -22,19 +23,26 @@ public class CourseGradingService
         _dbc = new GradeManagementContext(UserType.Teacher);
     }
 
-    public int StudentCount => _teacher.Stcs.Count(i => i.CourseId == _course.Id);
-
-    public IEnumerable<Stc> GradedStudents =>
+    public IEnumerable<Student> Students =>
         from stc in _teacher.Stcs
         where stc.CourseId == _course.Id
-        join sc in _dbc.Scs on stc.StudentId equals sc.StudentId
-        where sc.Score != null
-        select stc;
+        select stc.Student;
 
-    public IEnumerable<Stc> UngradedStudents =>
-        from stc in _teacher.Stcs
-        where stc.CourseId == _course.Id
-        join sc in _dbc.Scs on stc.StudentId equals sc.StudentId
-        where sc.Score == null
-        select stc;
+    public IEnumerable<(Student Student, decimal? Grade)> StudentsWithGrades =>
+        from s in Students
+        join sc in _dbc.Scs on s.Id equals sc.StudentId into scs
+        from sc in scs.DefaultIfEmpty()
+        select (s, sc?.Score);
+
+    public IEnumerable<(Student Student, Sc? Sc)> GradedStudents =>
+        from s in Students
+        join sc in _dbc.Scs on s.Id equals sc.StudentId
+        select (s, sc);
+
+    public IEnumerable<(Student Student, Sc? Sc)> UngradedStudents =>
+        from s in Students
+        join sc in _dbc.Scs on s.Id equals sc.StudentId into scs
+        from sc in scs.DefaultIfEmpty()
+        where sc == null
+        select (s, sc);
 }
