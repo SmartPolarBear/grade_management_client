@@ -9,9 +9,9 @@ namespace GradeManagement.Utils.Converter;
 public class GradingStatusCheckStatusConverter
     : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        GradingStatus gs = (GradingStatus)value;
+        GradingStatus gs = (GradingStatus)value!;
         return gs switch
         {
             GradingStatus.None => false,
@@ -21,8 +21,14 @@ public class GradingStatusCheckStatusConverter
         };
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        var status = value as bool?;
+        return status switch
+        {
+            false => GradingStatus.None,
+            null => GradingStatus.Partial,
+            true => GradingStatus.All,
+        };
     }
 }

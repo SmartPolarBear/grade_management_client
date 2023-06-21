@@ -29,7 +29,8 @@
         </Menu>
         <ToolBarTray
             DockPanel.Dock="Top">
-            <ToolBar>
+            <ToolBar
+                Band="0">
                 <Button Content="Change Password" Command="{Binding ChangePasswordCommand}"></Button>
 
                 <Separator />
@@ -58,10 +59,13 @@
                     <TextBlock Text="{Binding Path=TeacherData.Email}"></TextBlock>
                 </StackPanel>
 
+                <Separator></Separator>
+
                 <Button Content="Modify Profile"></Button>
             </ToolBar>
 
             <ToolBar
+                Band="1"
                 Name="FilterToolBar">
                 <StackPanel
                     Orientation="Horizontal"
@@ -141,6 +145,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=CourseCount}"></TextBlock>
                     <TextBlock Text=" Courses"></TextBlock>
+                    <TextBlock></TextBlock>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

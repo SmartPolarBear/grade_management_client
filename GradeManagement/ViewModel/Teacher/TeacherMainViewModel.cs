@@ -133,6 +133,8 @@ public class TeacherMainViewModel
 
     public int CourseCount => Courses?.Count() ?? 0;
 
+    public int AllCourseCount => TeacherData.Courses.Count;
+
     public IEnumerable<int> AllCredits =>
         (from c in TeacherData.Courses select Convert.ToInt32(c.Credit))
         .Distinct()
