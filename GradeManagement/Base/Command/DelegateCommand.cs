@@ -23,14 +23,14 @@ public class DelegateCommand : ICommand
 
     public void Execute(object? parameter)
     {
-        if (parameter != null) _executeAction(parameter);
+        _executeAction(parameter);
     }
 
-    public bool CanExecute(object? parameter) 
+    public bool CanExecute(object? parameter)
         => _canExecuteAction(parameter);
 
     public event EventHandler? CanExecuteChanged;
-    
+
     public void RaiseCanExecuteChanged()
         => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }

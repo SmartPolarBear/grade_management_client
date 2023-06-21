@@ -1,13 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GradeManagement.Data;
-using GradeManagement.Data.Model;
 using Microsoft.EntityFrameworkCore;
-using Course = GradeManagement.Data.Model.Course;
 using CourseRecord = GradeManagement.Data.Course;
 
-namespace GradeManagement.Service.Login;
+namespace GradeManagement.Service.Teacher;
 
 public enum GradingStatus
 {
@@ -18,13 +16,25 @@ public enum GradingStatus
 
 public sealed class TeacherService
 {
-    private readonly Teacher _teacher;
+    private readonly Data.Model.Teacher _teacher;
     private readonly GradeManagementContext _dbc;
 
-    public TeacherService(Teacher teacher)
+    public TeacherService(Data.Model.Teacher teacher)
     {
         _teacher = teacher;
         _dbc = new GradeManagementContext(UserType.Teacher);
+    }
+
+    public bool ValidatePassword(string password)
+    {
+        return _teacher.Password == password;
+    }
+
+    public async Task<bool> ChangePasswordAsync(string newPassword)
+    {
+        _teacher.Password = newPassword;
+        _dbc.Entry(_teacher).State = EntityState.Modified;
+        return await _dbc.SaveChangesAsync() > 0;
     }
 
     public IEnumerable<CourseRecord> TaughtCourses =>

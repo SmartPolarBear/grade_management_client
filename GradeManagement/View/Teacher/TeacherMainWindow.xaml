@@ -16,20 +16,23 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Action">
-                <MenuItem Header="Refresh" Command="{Binding Path=RefreshCommand}"></MenuItem>
+            <MenuItem Header="_File">
+                <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"></MenuItem>
+                <MenuItem Header="_Export"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Modify Account"></MenuItem>
-                <MenuItem Header="Change Password"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Click="ExitMenuItem_OnClick" Header="Exit"></MenuItem>
+                <MenuItem Click="ExitMenuItem_OnClick" Header="_Exit"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Account">
+                <MenuItem Header="_Modify Account" Command="{Binding ChangePasswordCommand}"></MenuItem>
+                <MenuItem Header="_Change Password"></MenuItem>
             </MenuItem>
         </Menu>
-        <ToolBarTray DockPanel.Dock="Top">
+        <ToolBarTray 
+            DockPanel.Dock="Top">
             <ToolBar>
-                <Button Content="Modify"></Button>
-                
-                <Separator/>
+                <Button Content="Change Password" Command="{Binding ChangePasswordCommand}"></Button>
+
+                <Separator />
 
                 <StackPanel
                     Orientation="Horizontal"
@@ -39,21 +42,66 @@
                     <TextBlock Text="{Binding Path=TeacherData.Name}"></TextBlock>
                 </StackPanel>
 
-                <StackPanel 
-                    Orientation="Horizontal" 
+                <StackPanel
+                    Orientation="Horizontal"
                     Margin="4,0"
                     VerticalAlignment="Center">
                     <TextBlock Text="ID: "></TextBlock>
                     <TextBlock Text="{Binding Path=TeacherData.Id}"></TextBlock>
                 </StackPanel>
-
-                <StackPanel 
+                
+                <StackPanel
                     Orientation="Horizontal"
                     Margin="4,0"
                     VerticalAlignment="Center">
                     <TextBlock Text="E-mail: "></TextBlock>
                     <TextBlock Text="{Binding Path=TeacherData.Email}"></TextBlock>
                 </StackPanel>
+                
+                <Button Content="Modify Profile"></Button>
+            </ToolBar>
+            
+            <ToolBar>
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <CheckBox 
+                        Name="FilterGradingMethodCheckBox"
+                        Margin="4,0" 
+                        VerticalAlignment="Center">Grading Method: </CheckBox>
+                    <ComboBox 
+                        VerticalAlignment="Center" 
+                        Margin="4,0" 
+                        IsEnabled="{Binding ElementName=FilterGradingMethodCheckBox,Path=IsChecked}"
+                        MinWidth="64"></ComboBox>
+                </StackPanel>
+                <Separator></Separator>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <CheckBox 
+                        Name="FilterKeywordCheckBox"
+                        Margin="4,0" >Keyword: </CheckBox>
+                    <TextBox 
+                        VerticalAlignment="Center" 
+                        Margin="4,0" 
+                        IsEnabled="{Binding ElementName=FilterKeywordCheckBox,Path=IsChecked}"
+                        MinWidth="96"></TextBox>
+                </StackPanel>
+                <Separator></Separator>
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <CheckBox 
+                        Name="FilterCreditCheckBox"
+                        Margin="4,0" 
+                        VerticalAlignment="Center">Credit: </CheckBox>
+                    <ComboBox 
+                        VerticalAlignment="Center" 
+                        Margin="4,0" 
+                        IsEnabled="{Binding ElementName=FilterCreditCheckBox,Path=IsChecked}"
+                        MinWidth="32"></ComboBox>
+                </StackPanel>
+                <Separator></Separator>
+                <Button Content="Filter"></Button>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">

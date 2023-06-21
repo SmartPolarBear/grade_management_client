@@ -7,6 +7,7 @@ using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
 using GradeManagement.Service.Login;
+using GradeManagement.Service.Teacher;
 using Course = GradeManagement.Data.Model.Course;
 
 namespace GradeManagement.ViewModel.Teacher;
@@ -32,6 +33,12 @@ public class TeacherMainViewModel
         NotifyAllPropertiesChanged<TeacherMainViewModel>();
     }
 
+    private void ChangePassword()
+    {
+        var service = new TeacherViewService(TeacherData);
+        service.ShowChangePasswordDialog();
+    }
+
     public Teacher TeacherData { get; }
 
     public IEnumerable<Course> Courses =>
@@ -41,5 +48,8 @@ public class TeacherMainViewModel
     public int CourseCount => Courses.Count();
 
     public ICommand RefreshCommand => new DelegateCommand(_ => RefreshData(),
+        _ => true);
+    
+    public ICommand ChangePasswordCommand => new DelegateCommand(_ => ChangePassword(),
         _ => true);
 }
