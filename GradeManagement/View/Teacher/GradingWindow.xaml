@@ -3,10 +3,87 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel.Teacher"
+        d:DataContext="{d:DesignInstance Type=vm:GradingViewModel, IsDesignTimeCreatable=False}"
         xmlns:local="clr-namespace:GradeManagement.View.Teacher"
         mc:Ignorable="d"
         Title="GradingWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <DockPanel>
+        <Menu
+            DockPanel.Dock="Top">
+            <MenuItem Header="_Class">
+                <MenuItem Header="_Statistics"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <StatusBar
+            DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock>Average:</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer>
+                <StackPanel>
+                    <Expander Header="About Class"
+                              ExpandDirection="Down"
+                              IsExpanded="True"
+                              IsEnabled="True">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <TextBlock Text="ID: "/>
+                                <TextBlock Text="{Binding CourseData.Id}" />
+                            </StackPanel>
+                            
+                            <StackPanel  Margin="4">
+                                <TextBlock Text="Name: "/>
+                                <TextBox 
+                                    MaxLines="4"
+                                    MinLines="1"
+                                    TextWrapping="Wrap"
+                                    IsReadOnly="False"
+                                    Text="{Binding CourseData.Name}" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <TextBlock Text="Credit: "/>
+                                <TextBlock Text="{Binding CourseData.Credit}" />
+                            </StackPanel>
+                            
+                            <Separator Margin="4"></Separator>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <TextBlock>Total Students: </TextBlock>
+                                <TextBlock Text="{Binding CourseData.Stcs.Count}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
+                    <Expander Header="Grade Composition"
+                              ExpandDirection="Down"
+                              IsEnabled="True">
+                        <StackPanel>
+                            <TextBlock>AAA</TextBlock>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+            <DataGrid Grid.Column="1"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Name"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Grade"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </Window>
