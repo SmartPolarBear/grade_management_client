@@ -16,8 +16,10 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"></MenuItem>
+            <MenuItem Header="_Data">
+                <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
+                          CommandParameter="{Binding ElementName=FilterToolBar}">
+                </MenuItem>
                 <MenuItem Header="_Export"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Click="ExitMenuItem_OnClick" Header="_Exit"></MenuItem>
@@ -144,8 +146,16 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=CourseCount}"></TextBlock>
-                    <TextBlock Text=" Courses"></TextBlock>
-                    <TextBlock></TextBlock>
+                    <TextBlock Text=" Records"></TextBlock>
+                </StackPanel>
+            </StatusBarItem>
+
+            <StatusBarItem
+                HorizontalAlignment="Right"
+                VerticalContentAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=AllCourseCount,Mode=OneTime}"></TextBlock>
+                    <TextBlock Text=" Total Courses"></TextBlock>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
@@ -165,6 +175,32 @@
                     <DataGridTextColumn Header="Grading Method"
                                         Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                 </DataGrid.Columns>
+
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
+                                  CommandParameter="{Binding ElementName=FilterToolBar}">
+                        </MenuItem>
+                        <Separator></Separator>
+                        <MenuItem Header="_Clear Filter" Command="{Binding Path=ClearCourseFilterCommand}">
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="_Grade"></MenuItem>
+                                    <MenuItem Header="_Statistics"></MenuItem>
+                                    <Separator></Separator>
+                                    <MenuItem Header="_Export"></MenuItem>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.RowStyle>
             </DataGrid>
         </Grid>
     </DockPanel>

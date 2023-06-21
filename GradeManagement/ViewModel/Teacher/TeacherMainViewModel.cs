@@ -103,11 +103,11 @@ public class TeacherMainViewModel
         UpdateCoursesCommand.RaiseCanExecuteChanged();
     }
 
-    private void RefreshData()
+    private void RefreshData(object? filterToolBar)
     {
         _service = new TeacherService(TeacherData);
         NotifyAllPropertiesChanged<TeacherMainViewModel>();
-        UpdateCourses(null);
+        UpdateCourses(filterToolBar);
     }
 
     private void ChangePassword()
@@ -184,7 +184,7 @@ public class TeacherMainViewModel
         }
     }
 
-    public ICommand RefreshCommand => new DelegateCommand(_ => RefreshData(),
+    public ICommand RefreshCommand => new DelegateCommand(RefreshData,
         _ => true);
 
     public ICommand ChangePasswordCommand => new DelegateCommand(_ => ChangePassword(),
