@@ -23,6 +23,10 @@ public partial class Course
 
     public byte GradingMethod { get; set; }
 
+    [StringLength(32)]
+    [Unicode(false)]
+    public string Term { get; set; } = null!;
+
     [InverseProperty("Course")]
     public virtual ICollection<Scaudit> Scaudits { get; set; } = new List<Scaudit>();
 

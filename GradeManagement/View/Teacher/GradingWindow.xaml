@@ -55,13 +55,19 @@
                                     MaxLines="4"
                                     MinLines="1"
                                     TextWrapping="Wrap"
-                                    IsReadOnly="False"
+                                    IsReadOnly="True"
+                                    IsEnabled="False"
                                     Text="{Binding CourseData.Name}" />
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="4">
                                 <TextBlock Text="Credit: " />
                                 <TextBlock Text="{Binding CourseData.Credit}" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <TextBlock Text="Term: " />
+                                <TextBlock Text="{Binding CourseData.Term}" />
                             </StackPanel>
 
                             <Separator Margin="4"></Separator>

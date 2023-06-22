@@ -71,6 +71,7 @@ public partial class GmsContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Course__3214EC2734ABCF1C");
 
             entity.Property(e => e.Id).IsFixedLength();
+            entity.Property(e => e.Term).HasDefaultValueSql("('2018-2019-1')");
         });
 
         modelBuilder.Entity<GradeComposition>(entity =>

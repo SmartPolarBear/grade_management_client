@@ -97,6 +97,24 @@
                     </ComboBox>
                 </StackPanel>
                 <Separator></Separator>
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <CheckBox
+                        Name="TermCheckBox"
+                        Margin="4,0"
+                        VerticalAlignment="Center">
+                        Term:
+                    </CheckBox>
+                    <ComboBox
+                        Name="TermComboBox"
+                        VerticalAlignment="Center"
+                        Margin="4,0"
+                        IsEnabled="{Binding ElementName=TermCheckBox,Path=IsChecked}"
+                        MinWidth="64">
+                    </ComboBox>
+                </StackPanel>
+                <Separator></Separator>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox
                         Name="FilterKeywordCheckBox"
@@ -109,7 +127,7 @@
                         VerticalAlignment="Center"
                         Margin="4,0"
                         IsEnabled="{Binding ElementName=FilterKeywordCheckBox,Path=IsChecked}"
-                        MinWidth="96">
+                        MinWidth="64">
                     </TextBox>
                 </StackPanel>
                 <Separator></Separator>
@@ -185,6 +203,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Term" Binding="{Binding Term}" />
                             <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
                             <DataGridTextColumn Header="Grading Method"
                                                 Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
@@ -230,6 +249,7 @@
                             <DataGridTextColumn Header="Name" Binding="{Binding Student.Name}" />
                             <DataGridTextColumn Header="Course" Binding="{Binding Course.Name}" />
                             <DataGridTextColumn Header="Credit" Binding="{Binding Course.Credit}" />
+                            <DataGridTextColumn Header="Term" Binding="{Binding Course.Term}" />
                             <DataGridTextColumn Header="Grading Method"
                                                 Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                         </DataGrid.Columns>
