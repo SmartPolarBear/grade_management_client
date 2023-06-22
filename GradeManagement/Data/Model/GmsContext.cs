@@ -23,6 +23,8 @@ public partial class GmsContext : DbContext
 
     public virtual DbSet<Course> Courses { get; set; }
 
+    public virtual DbSet<GradeComposition> GradeCompositions { get; set; }
+
     public virtual DbSet<Sc> Scs { get; set; }
 
     public virtual DbSet<Scaudit> Scaudits { get; set; }
@@ -32,6 +34,8 @@ public partial class GmsContext : DbContext
     public virtual DbSet<Student> Students { get; set; }
 
     public virtual DbSet<StudentViewForTeacher> StudentViewForTeachers { get; set; }
+
+    public virtual DbSet<Tcgc> Tcgcs { get; set; }
 
     public virtual DbSet<Teacher> Teachers { get; set; }
 
@@ -69,20 +73,25 @@ public partial class GmsContext : DbContext
             entity.Property(e => e.Id).IsFixedLength();
         });
 
+        modelBuilder.Entity<GradeComposition>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__GradeCom__3214EC27D3274C21");
+        });
+
         modelBuilder.Entity<Sc>(entity =>
         {
-            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD6170E73699");
+            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD6123EAE7D4");
 
             entity.Property(e => e.StudentId).IsFixedLength();
             entity.Property(e => e.CourseId).IsFixedLength();
 
             entity.HasOne(d => d.Course).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__CourseID__160F4887");
+                .HasConstraintName("FK__SC__CourseID__22751F6C");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__StudentID__151B244E");
+                .HasConstraintName("FK__SC__StudentID__2180FB33");
         });
 
         modelBuilder.Entity<Scaudit>(entity =>
@@ -135,6 +144,28 @@ public partial class GmsContext : DbContext
             entity.ToView("StudentViewForTeacher");
 
             entity.Property(e => e.Id).IsFixedLength();
+        });
+
+        modelBuilder.Entity<Tcgc>(entity =>
+        {
+            entity.HasKey(e => new { e.TeacherId, e.CourseId, e.GradeCompositionId }).HasName("PK__TCGC__2CD69DC11CACC9C4");
+
+            entity.ToTable("TCGC", tb => tb.HasTrigger("TCGCInsertTrigger"));
+
+            entity.Property(e => e.TeacherId).IsFixedLength();
+            entity.Property(e => e.CourseId).IsFixedLength();
+
+            entity.HasOne(d => d.Course).WithMany(p => p.Tcgcs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TCGC__CourseID__15DA3E5D");
+
+            entity.HasOne(d => d.GradeComposition).WithMany(p => p.Tcgcs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TCGC__GradeCompo__16CE6296");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.Tcgcs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TCGC__TeacherID__14E61A24");
         });
 
         modelBuilder.Entity<Teacher>(entity =>

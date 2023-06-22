@@ -30,6 +30,9 @@ public partial class Teacher
     [InverseProperty("Teacher")]
     public virtual ICollection<Stc> Stcs { get; set; } = new List<Stc>();
 
+    [InverseProperty("Teacher")]
+    public virtual ICollection<Tcgc> Tcgcs { get; set; } = new List<Tcgc>();
+
     [ForeignKey("TeacherId")]
     [InverseProperty("Teachers")]
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();

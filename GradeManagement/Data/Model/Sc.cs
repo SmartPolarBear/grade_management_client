@@ -22,10 +22,8 @@ public partial class Sc
     [Unicode(false)]
     public string CourseId { get; set; } = null!;
 
-    [Column(TypeName = "decimal(2, 0)")]
+    [Column(TypeName = "decimal(5, 2)")]
     public decimal Score { get; set; }
-
-    public byte? Rating { get; set; }
 
     [ForeignKey("CourseId")]
     [InverseProperty("Scs")]
