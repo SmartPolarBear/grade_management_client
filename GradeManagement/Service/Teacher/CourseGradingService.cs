@@ -23,26 +23,41 @@ public class CourseGradingService
         _dbc = new GradeManagementContext(UserType.Teacher);
     }
 
-    public IEnumerable<Student> Students =>
+    public IEnumerable<Stc> Stcs =>
         from stc in _teacher.Stcs
         where stc.CourseId == _course.Id
+        select stc;
+
+    public IEnumerable<Student> Students =>
+        from stc in Stcs
         select stc.Student;
 
     public IEnumerable<(Student Student, decimal? Grade)> StudentsWithGrades =>
-        from s in Students
-        join sc in _dbc.Scs on s.Id equals sc.StudentId into scs
+        from s in Stcs
+        join sc in _dbc.Scs on
+            new { s.StudentId, s.CourseId } equals
+            new { sc.StudentId, sc.CourseId }
+            into scs
         from sc in scs.DefaultIfEmpty()
-        select (s, sc?.Score);
+        select (s.Student, sc?.Score);
 
     public IEnumerable<(Student Student, Sc? Sc)> GradedStudents =>
-        from s in Students
-        join sc in _dbc.Scs on s.Id equals sc.StudentId
-        select (s, sc);
+        from s in Stcs
+        join sc in _dbc.Scs on
+            new { s.StudentId, s.CourseId } equals
+            new { sc.StudentId, sc.CourseId }
+            into scs
+        from sc in scs.DefaultIfEmpty()
+        where sc != null
+        select (s.Student, sc);
 
     public IEnumerable<(Student Student, Sc? Sc)> UngradedStudents =>
-        from s in Students
-        join sc in _dbc.Scs on s.Id equals sc.StudentId into scs
+        from s in Stcs
+        join sc in _dbc.Scs on
+            new { s.StudentId, s.CourseId } equals
+            new { sc.StudentId, sc.CourseId }
+            into scs
         from sc in scs.DefaultIfEmpty()
         where sc == null
-        select (s, sc);
+        select (s.Student, sc);
 }
