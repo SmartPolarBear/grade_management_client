@@ -18,4 +18,10 @@ public sealed class TeacherViewService
         var dialog = new ChangePasswordDialog(_teacher);
         dialog.ShowDialog();
     }
+    
+    public void ShowChangeAccountInfoDialog()
+    {
+        var dialog = new ChangeAccountInfoDialog(_teacher);
+        dialog.ShowDialog();
+    }
 }

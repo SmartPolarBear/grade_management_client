@@ -8,6 +8,7 @@ using System.Windows.Input;
 using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
+using GradeManagement.Data.Model;
 using GradeManagement.Service.Login;
 using GradeManagement.Service.Teacher;
 using Course = GradeManagement.Data.Model.Course;
@@ -33,13 +34,72 @@ public class TeacherMainViewModel
             _ =>
                 FilterGradingMethod || FilterCredit || FilterKeyword || _filtered);
 
-        UpdateCoursesCommand = new DelegateCommand(UpdateCourses,
+        FilterResultsCommand = new DelegateCommand(FilterResults,
             _ =>
                 FilterGradingMethod || FilterCredit || FilterKeyword);
 
         _filtered = false;
 
-        UpdateCourses(null);
+        FilterResults(null);
+    }
+
+    private void FilterResults(object? filterToolBar)
+    {
+        UpdateCourses(filterToolBar);
+        UpdateStudents(filterToolBar);
+    }
+
+    private void UpdateStudents(object? filterToolBar)
+    {
+        var students = from s in TeacherData.Stcs select s;
+
+        if (filterToolBar == null || !FilterGradingMethod && !FilterCredit && !FilterKeyword)
+        {
+            StudentsWithCourses = students;
+            _filtered = false;
+            return;
+        }
+
+        var toolbar = (filterToolBar as ToolBar)!;
+
+        if (FilterGradingMethod)
+        {
+            var gradingMethodComboBox = (ComboBox)toolbar.FindName("GradingMethodComboBox")!;
+
+            students = from s in students
+                where (CourseGradingMethod)s.Course.GradingMethod ==
+                      (CourseGradingMethod)gradingMethodComboBox.SelectedValue
+                select s;
+
+            _filtered = true;
+        }
+
+        if (FilterCredit)
+        {
+            var creditComboBox = (ComboBox)toolbar.FindName("CreditComboBox")!;
+
+            students = from s in students
+                where Convert.ToInt32(s.Course.Credit) == Convert.ToInt32(creditComboBox.SelectedValue)
+                select s;
+
+            _filtered = true;
+        }
+
+        if (FilterKeyword)
+        {
+            var keywordTextBox = (TextBox)toolbar.FindName("KeywordTextBox")!;
+
+            students = from s in students
+                where s.Course.Name.Contains(keywordTextBox.Text) || s.Course.Id.Contains(keywordTextBox.Text)
+                                                                  || s.Student.Name.Contains(keywordTextBox.Text) ||
+                                                                  s.Student.Id.Contains(keywordTextBox.Text)
+                select s;
+
+            _filtered = true;
+        }
+
+
+        StudentsWithCourses = students;
     }
 
     private void UpdateCourses(object? filterToolBar)
@@ -97,27 +157,49 @@ public class TeacherMainViewModel
     private void ClearCourseFilter(object? filterToolBar)
     {
         FilterGradingMethod = FilterCredit = FilterKeyword = false;
-        UpdateCourses(filterToolBar);
+        FilterResults(filterToolBar);
         _filtered = false;
         ClearCourseFilterCommand.RaiseCanExecuteChanged();
-        UpdateCoursesCommand.RaiseCanExecuteChanged();
+        FilterResultsCommand.RaiseCanExecuteChanged();
     }
 
     private void RefreshData(object? filterToolBar)
     {
         _service = new TeacherService(TeacherData);
         NotifyAllPropertiesChanged<TeacherMainViewModel>();
-        UpdateCourses(filterToolBar);
+        FilterResults(filterToolBar);
     }
 
     private void ChangePassword()
     {
         var service = new TeacherViewService(TeacherData);
-        UpdateCourses(null);
         service.ShowChangePasswordDialog();
+        FilterResults(null);
     }
 
+    private void ModifyProfile()
+    {
+        var service = new TeacherViewService(TeacherData);
+        service.ShowChangeAccountInfoDialog();
+        NotifyPropertyChanged(nameof(TeacherData));
+    }
+
+    public string WindowTitle => $"Teacher - {TeacherData.Name.Trim()}";
+
     public Teacher TeacherData { get; }
+
+    private IEnumerable<Stc>? _studentsWithCourses;
+
+    public IEnumerable<Stc>? StudentsWithCourses
+    {
+        get => _studentsWithCourses;
+        set
+        {
+            SetProperty(ref _studentsWithCourses, value);
+            NotifyPropertyChanged(nameof(StudentCount));
+        }
+    }
+
 
     private IEnumerable<Course>? _courses;
 
@@ -133,7 +215,11 @@ public class TeacherMainViewModel
 
     public int CourseCount => Courses?.Count() ?? 0;
 
+    public int StudentCount => StudentsWithCourses?.Count() ?? 0;
+
     public int AllCourseCount => TeacherData.Courses.Count;
+
+    public int AllStudentCount => TeacherData.Stcs.Count;
 
     public IEnumerable<int> AllCredits =>
         (from c in TeacherData.Courses select Convert.ToInt32(c.Credit))
@@ -154,7 +240,7 @@ public class TeacherMainViewModel
         {
             SetProperty(ref _filterGradingMethod, value);
             ClearCourseFilterCommand.RaiseCanExecuteChanged();
-            UpdateCoursesCommand.RaiseCanExecuteChanged();
+            FilterResultsCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -167,7 +253,7 @@ public class TeacherMainViewModel
         {
             SetProperty(ref _filterKeyword, value);
             ClearCourseFilterCommand.RaiseCanExecuteChanged();
-            UpdateCoursesCommand.RaiseCanExecuteChanged();
+            FilterResultsCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -180,7 +266,7 @@ public class TeacherMainViewModel
         {
             SetProperty(ref _filterCredit, value);
             ClearCourseFilterCommand.RaiseCanExecuteChanged();
-            UpdateCoursesCommand.RaiseCanExecuteChanged();
+            FilterResultsCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -190,7 +276,11 @@ public class TeacherMainViewModel
     public ICommand ChangePasswordCommand => new DelegateCommand(_ => ChangePassword(),
         _ => true);
 
-    public DelegateCommand UpdateCoursesCommand { get; }
+    public ICommand ModifyProfileCommand => new DelegateCommand(_ => ModifyProfile(),
+        _ => true);
+
+
+    public DelegateCommand FilterResultsCommand { get; }
 
     public DelegateCommand ClearCourseFilterCommand { get; }
 }

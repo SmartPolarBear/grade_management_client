@@ -9,30 +9,37 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
+        Name="ChangeAccountInfoDialogWindow"
         Title="Change Account Information" Height="200" Width="200">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom">
             <Separator Margin="8"></Separator>
             <DockPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Margin="4">Change Password</Button>
+                    <Button Name="UpdatePasswordButton" Click="UpdatePasswordButton_OnClick" Margin="4">Change Password</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Margin="4">OK</Button>
-                    <Button Margin="4">Cancel</Button>
+                    <Button Name="OkButton" Click="OkButton_OnClick" IsDefault="True" Margin="4">OK</Button>
+                    <Button Name="CancelButton" Click="CancelButton_OnClick" IsCancel="True" Margin="4">Cancel</Button>
                 </StackPanel>
             </DockPanel>
         </StackPanel>
 
         <StackPanel Margin="4">
-            <TextBlock>Name:</TextBlock>
-            <TextBox></TextBox>
-            
             <TextBlock>ID:</TextBlock>
-            <TextBox IsReadOnly="True"></TextBox>
-            
+            <TextBox Name="IdTextBox" IsReadOnly="True" IsEnabled="False"
+                     Text="{Binding  ElementName=ChangeAccountInfoDialogWindow, Path=Id,Mode=OneTime}">
+            </TextBox>
+
+            <TextBlock>Name:</TextBlock>
+            <TextBox Name="NameTextBox"
+                     Text="{Binding  ElementName=ChangeAccountInfoDialogWindow, Path=TeacherName,Mode=TwoWay}">
+            </TextBox>
+
             <TextBlock>E-mail:</TextBlock>
-            <TextBox></TextBox>
+            <TextBox Name="EMailTextBox"
+                     Text="{Binding  ElementName=ChangeAccountInfoDialogWindow, Path=Email,Mode=TwoWay}">
+            </TextBox>
 
         </StackPanel>
     </DockPanel>

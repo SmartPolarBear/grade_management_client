@@ -80,18 +80,18 @@ public partial class GmsContext : DbContext
 
         modelBuilder.Entity<Sc>(entity =>
         {
-            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD6123EAE7D4");
+            entity.HasKey(e => new { e.StudentId, e.CourseId }).HasName("PK__SC__5E57FD6101C1275D");
 
             entity.Property(e => e.StudentId).IsFixedLength();
             entity.Property(e => e.CourseId).IsFixedLength();
 
             entity.HasOne(d => d.Course).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__CourseID__22751F6C");
+                .HasConstraintName("FK__SC__CourseID__27F8EE98");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Scs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SC__StudentID__2180FB33");
+                .HasConstraintName("FK__SC__StudentID__2704CA5F");
         });
 
         modelBuilder.Entity<Scaudit>(entity =>

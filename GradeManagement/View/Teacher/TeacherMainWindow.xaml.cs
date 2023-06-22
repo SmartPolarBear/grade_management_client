@@ -32,7 +32,7 @@ public partial class TeacherMainWindow : Window
 
         gradingWindow.Closed += (o, args) =>
         {
-            this.ViewModelOf<TeacherMainViewModel>().UpdateCoursesCommand.Execute(
+            this.ViewModelOf<TeacherMainViewModel>().FilterResultsCommand.Execute(
                 this.FilterToolBar);
         };
     }

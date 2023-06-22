@@ -8,7 +8,8 @@
         xmlns:converters="clr-namespace:GradeManagement.Utils.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:TeacherMainViewModel, IsDesignTimeCreatable=False}"
-        Title="TeacherMainWindow" Height="450" Width="800">
+        Title="{Binding WindowTitle, Mode=OneTime}"
+        Height="450" Width="800">
 
     <Window.Resources>
         <converters:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
@@ -25,11 +26,8 @@
                 <MenuItem Click="ExitMenuItem_OnClick" Header="_Exit"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Account">
-                <MenuItem Header="_Modify Account"></MenuItem>
+                <MenuItem Header="_Modify Account" Command="{Binding ModifyProfileCommand}"></MenuItem>
                 <MenuItem Header="_Change Password" Command="{Binding ChangePasswordCommand}"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="_Students">
-                <MenuItem Header="_List All Students"></MenuItem>
             </MenuItem>
         </Menu>
         <ToolBarTray
@@ -66,7 +64,7 @@
 
                 <Separator></Separator>
 
-                <Button Content="Modify Profile"></Button>
+                <Button Content="Modify Profile" Command="{Binding ModifyProfileCommand}"></Button>
             </ToolBar>
 
             <ToolBar
@@ -137,7 +135,7 @@
                 <Separator></Separator>
                 <Button Content="Filter"
                         CommandParameter="{Binding ElementName=FilterToolBar}"
-                        Command="{Binding UpdateCoursesCommand}">
+                        Command="{Binding FilterResultsCommand}">
                 </Button>
                 <Button Content="Clear"
                         CommandParameter="{Binding ElementName=FilterToolBar}"
@@ -149,7 +147,14 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=CourseCount}"></TextBlock>
-                    <TextBlock Text=" Records"></TextBlock>
+                    <TextBlock Text=" Course Records"></TextBlock>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator></Separator>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=StudentCount}"></TextBlock>
+                    <TextBlock Text=" Student Records"></TextBlock>
                 </StackPanel>
             </StatusBarItem>
 
@@ -158,55 +163,80 @@
                 VerticalContentAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=AllCourseCount,Mode=OneTime}"></TextBlock>
-                    <TextBlock Text=" Total Courses"></TextBlock>
+                    <TextBlock Text=" Total Courses, "></TextBlock>
+                    <TextBlock Text="{Binding Path=AllStudentCount,Mode=OneTime}"></TextBlock>
+                    <TextBlock Text=" Total Students"></TextBlock>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <DataGrid
-                IsReadOnly="True"
-                SelectionMode="Single"
-                
-                ItemsSource="{Binding Courses}"
-                AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
-                    <DataGridTextColumn Header="Grading Method"
-                                        Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
-                </DataGrid.Columns>
+            <TabControl>
+                <TabItem Header="Courses">
+                    <DataGrid
+                        IsReadOnly="True"
+                        SelectionMode="Single"
 
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
-                                  CommandParameter="{Binding ElementName=FilterToolBar}">
-                        </MenuItem>
-                        <Separator></Separator>
-                        <MenuItem Header="_Clear Filter" Command="{Binding Path=ClearCourseFilterCommand}">
-                        </MenuItem>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
+                        ItemsSource="{Binding Courses}"
+                        AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
+                            <DataGridTextColumn Header="Grading Method"
+                                                Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                        </DataGrid.Columns>
 
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                       <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_MouseDoubleClick"></EventSetter>
-                        <Setter Property="ContextMenu">
-                            <Setter.Value>
-                                <ContextMenu>
-                                    <MenuItem Header="_Grade"></MenuItem>
-                                    <MenuItem Header="_Statistics"></MenuItem>
-                                    <Separator></Separator>
-                                    <MenuItem Header="_Export"></MenuItem>
-                                </ContextMenu>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </DataGrid.RowStyle>
-            </DataGrid>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
+                                          CommandParameter="{Binding ElementName=FilterToolBar}">
+                                </MenuItem>
+                                <Separator></Separator>
+                                <MenuItem Header="_Clear Filter" Command="{Binding Path=ClearCourseFilterCommand}">
+                                </MenuItem>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                                <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_MouseDoubleClick"></EventSetter>
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu>
+                                            <MenuItem Header="_Grade"></MenuItem>
+                                            <MenuItem Header="_Statistics"></MenuItem>
+                                            <Separator></Separator>
+                                            <MenuItem Header="_Export"></MenuItem>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Students">
+                    <DataGrid
+                        IsReadOnly="True"
+                        SelectionMode="Single"
+
+                        ItemsSource="{Binding StudentsWithCourses}"
+                        AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Student.Id}" />
+                            <DataGridTextColumn Header="Name" Binding="{Binding Student.Name}" />
+                            <DataGridTextColumn Header="Course" Binding="{Binding Course.Name}" />
+                            <DataGridTextColumn Header="Credit" Binding="{Binding Course.Credit}" />
+                            <DataGridTextColumn Header="Grading Method"
+                                                Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
         </Grid>
     </DockPanel>
 </Window>

@@ -37,6 +37,12 @@ public sealed class TeacherService
         return await _dbc.SaveChangesAsync() > 0;
     }
 
+    public async Task<bool> UpdateTeacherInfoAsync(Data.Model.Teacher teacher)
+    {
+        _dbc.Entry(teacher).State = EntityState.Modified;
+        return await _dbc.SaveChangesAsync() > 0;
+    }
+
     public IEnumerable<CourseRecord> TaughtCourses =>
         from c in _teacher.Courses
         select new CourseRecord(c.Id, c);
