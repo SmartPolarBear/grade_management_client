@@ -9,6 +9,7 @@ namespace GradeManagement.Service.Teacher;
 
 using Teacher = Data.Model.Teacher;
 using Course = Data.Model.Course;
+using GradeComposition = Data.Model.GradeComposition;
 
 public class CourseGradingService(Teacher teacher, Course course)
 {
@@ -75,4 +76,9 @@ public class CourseGradingService(Teacher teacher, Course course)
         from sc in scs.DefaultIfEmpty()
         where sc == null
         select (s.Student, sc);
+
+    public IEnumerable<Tcgc> GradeCompositions =>
+        from tcgc in _dbc.Tcgcs
+        where tcgc.CourseId == _course.Id && tcgc.TeacherId == _teacher.Id
+        select tcgc;
 }

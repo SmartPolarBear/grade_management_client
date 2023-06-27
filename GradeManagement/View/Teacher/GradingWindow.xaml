@@ -100,8 +100,8 @@
                             <TextBlock Margin="4">Grading Parts: </TextBlock>
                             <ListView
                                 MinHeight="64"
+                                ItemsSource="{Binding GradingCompositionDisplayNames}"
                                 Margin="4">
-
                             </ListView>
                             <Button Margin="4" Content="Edit"></Button>
                         </StackPanel>

@@ -78,4 +78,8 @@ public class GradingViewModel
 
     public int UngradedStudentCount =>
         _gradingService.UngradedStudents.Count();
+
+    public IEnumerable<string> GradingCompositionDisplayNames
+        => from gc in _gradingService.GradeCompositions.ToList() // ToList() to avoid EF Core's fucking restrictions
+            select $"{gc.Weight:F1}% - {gc.GradeComposition.Name}";
 }
