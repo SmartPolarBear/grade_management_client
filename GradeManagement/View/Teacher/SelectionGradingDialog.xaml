@@ -9,8 +9,24 @@
         ResizeMode="NoResize"
         ShowInTaskbar="True"
         WindowStartupLocation="CenterOwner"
-        Title="Grading" MinHeight="200" MinWidth="300">
-    <Grid>
-        
-    </Grid>
+        Name="TheSelectionGradingDialog"
+        Title="Grading" MinHeight="120" MinWidth="200">
+    <DockPanel>
+        <StackPanel Margin="0,4"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    DockPanel.Dock="Bottom">
+            <Button Name="OkButton" Click="OkButton_OnClick" IsDefault="True" Margin="4,0" MinWidth="32">Ok</Button>
+            <Button Name="CancelButton" Click="CancelButton_OnClick" IsCancel="True" Margin="4,0" MinWidth="32">Cache</Button>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Grade :" />
+            <ComboBox MinWidth="128"
+                      Name="GradeComboBox"
+                      SelectedIndex="{Binding ElementName=TheSelectionGradingDialog, Path=InitialSelectedIndex,Mode=OneTime}"
+                      ItemsSource="{Binding ElementName=TheSelectionGradingDialog, Path=Grades}">
+            </ComboBox>
+        </StackPanel>
+    </DockPanel>
 </Window>

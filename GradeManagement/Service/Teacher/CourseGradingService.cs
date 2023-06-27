@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
 using Student = GradeManagement.Data.Model.Student;
@@ -9,18 +10,32 @@ namespace GradeManagement.Service.Teacher;
 using Teacher = Data.Model.Teacher;
 using Course = Data.Model.Course;
 
-public class CourseGradingService
+public class CourseGradingService(Teacher teacher, Course course)
 {
-    private readonly Teacher _teacher;
-    private readonly Course _course;
+    private readonly Teacher _teacher = teacher;
+    private readonly Course _course = course;
 
-    private readonly GradeManagementContext _dbc;
+    private readonly GradeManagementContext _dbc = new(UserType.Teacher);
 
-    public CourseGradingService(Teacher teacher, Course course)
+    public async Task GradeStudent(Student student, Course c, decimal gradeResult)
     {
-        _teacher = teacher;
-        _course = course;
-        _dbc = new GradeManagementContext(UserType.Teacher);
+        var sc = await _dbc.Scs.FindAsync(student.Id, c.Id);
+        if (sc == null)
+        {
+            sc = new Sc
+            {
+                StudentId = student.Id,
+                CourseId = c.Id,
+                Score = gradeResult
+            };
+            _dbc.Scs.Add(sc);
+        }
+        else
+        {
+            sc.Score = gradeResult;
+        }
+
+        await _dbc.SaveChangesAsync();
     }
 
     public IEnumerable<Stc> Stcs =>

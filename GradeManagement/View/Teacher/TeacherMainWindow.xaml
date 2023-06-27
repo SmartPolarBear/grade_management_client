@@ -197,7 +197,6 @@
                     <DataGrid
                         IsReadOnly="True"
                         SelectionMode="Single"
-
                         ItemsSource="{Binding Courses}"
                         AutoGenerateColumns="False">
                         <DataGrid.Columns>

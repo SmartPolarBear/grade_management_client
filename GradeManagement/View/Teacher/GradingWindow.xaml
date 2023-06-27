@@ -64,7 +64,7 @@
                                 <TextBlock Text="Credit: " />
                                 <TextBlock Text="{Binding CourseData.Credit}" />
                             </StackPanel>
-                            
+
                             <StackPanel Orientation="Horizontal" Margin="4">
                                 <TextBlock Text="Term: " />
                                 <TextBlock Text="{Binding CourseData.Term}" />
@@ -103,7 +103,7 @@
                                 Margin="4">
 
                             </ListView>
-                            <Button Margin="4" Content="Edit"></Button>                            
+                            <Button Margin="4" Content="Edit"></Button>
                         </StackPanel>
                     </Expander>
 
@@ -124,15 +124,32 @@
             <DataGrid Grid.Column="1"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
+                      Name="MainDataGrid"
                       ItemsSource="{Binding Students}"
                       SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Student.Id}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Name" Binding="{Binding Student.Name}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Grade"
-                                        Binding="{Binding Grade,Converter={StaticResource NullToStringConverter},ConverterParameter=Not Graded Yet}">
+                                        Binding="{Binding  DisplayGrade}">
                     </DataGridTextColumn>
                 </DataGrid.Columns>
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_OnMouseDoubleClick"></EventSetter>
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="_Grade"></MenuItem>
+                                    <MenuItem Header="_Statistics"></MenuItem>
+                                    <Separator></Separator>
+                                    <MenuItem Header="_Export"></MenuItem>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.RowStyle>
             </DataGrid>
         </Grid>
     </DockPanel>

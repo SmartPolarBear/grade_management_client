@@ -1,9 +1,12 @@
 using System;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
+using GradeManagement.Utils;
 using GradeManagement.ViewModel.Teacher;
 
 namespace GradeManagement.View.Teacher;
@@ -61,5 +64,24 @@ public partial class GradingWindow : Window
     private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         this.Close();
+    }
+
+    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var student = (sender as Control)!.DataContextOf<StudentWithGrade>();
+        var vm = this.ViewModelOf<GradingViewModel>()!;
+        Window gradingWin = (CourseGradingMethod)_course.GradingMethod switch
+        {
+            CourseGradingMethod.Score5 or CourseGradingMethod.PF => new SelectionGradingDialog(
+                (CourseGradingMethod)_course.GradingMethod, student.Grade),
+            CourseGradingMethod.Score100 => throw new NotImplementedException(),
+            _ => throw new ArgumentException("Invalid grading method!")
+        };
+
+        if (gradingWin.ShowDialog() == true)
+        {
+            vm.GradeStudent((gradingWin as IGradingDialog)!.GradeResult,
+                student);
+        }
     }
 }
