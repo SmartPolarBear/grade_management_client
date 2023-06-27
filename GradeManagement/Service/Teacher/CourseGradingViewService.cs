@@ -20,12 +20,19 @@ public class CourseGradingViewService(Teacher teacher, Course course)
         dialog.Closed += (sender, args) => onDialogClosed?.Invoke();
     }
 
-    public decimal ShowComplexGradingDialog(Action? onDialogClosed = null)
+    public decimal? ShowComplexGradingDialog(Action? onDialogClosed = null)
     {
         var service = new CourseGradingService(_teacher, _course);
         var dialog = new ComplexGradingDialog(service.GradeCompositions.ToList());
         dialog.ShowDialog();
         dialog.Closed += (sender, args) => onDialogClosed?.Invoke();
-        return dialog.GradeResult;
+        if (dialog.DialogResult == true)
+        {
+            return dialog.GradeResult;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

@@ -104,6 +104,9 @@ public class GradingViewModel
     {
         var item = (sender as StudentWithGrade)!;
         var grade = _gradingViewService.ShowComplexGradingDialog();
-        GradeStudent(grade, item);
+        if (grade != null)
+        {
+            GradeStudent(grade!.Value, item);
+        }
     }, _ => true);
 }

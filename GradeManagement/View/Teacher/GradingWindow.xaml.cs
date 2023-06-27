@@ -70,7 +70,6 @@ public partial class GradingWindow : Window
         {
             CourseGradingMethod.Score5 or CourseGradingMethod.PF => new SelectionGradingDialog(
                 (CourseGradingMethod)_course.GradingMethod, student.Grade),
-            CourseGradingMethod.Score100 => throw new NotImplementedException(),
             _ => throw new ArgumentException("Invalid grading method!")
         };
 
