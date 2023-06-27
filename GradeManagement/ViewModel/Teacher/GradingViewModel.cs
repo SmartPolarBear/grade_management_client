@@ -99,4 +99,11 @@ public class GradingViewModel
 
 
     public ICommand EditGradeCompositionCommand => new DelegateCommand(_ => EditGradeComposition(), _ => true);
+
+    public ICommand Grade100MarkSystemCommand => new DelegateCommand((sender) =>
+    {
+        var item = (sender as StudentWithGrade)!;
+        var grade = _gradingViewService.ShowComplexGradingDialog();
+        GradeStudent(grade, item);
+    }, _ => true);
 }

@@ -108,7 +108,7 @@ public class CourseGradingService(Teacher teacher, Course course)
         from sc in scs.DefaultIfEmpty()
         where sc == null
         select (s.Student, sc);
-
+    
     public IEnumerable<Tcgc> GradeCompositions =>
         from tcgc in _dbc.Tcgcs
         where tcgc.CourseId == _course.Id && tcgc.TeacherId == _teacher.Id

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using GradeManagement.View.Teacher;
 
 namespace GradeManagement.Service.Teacher;
@@ -17,5 +18,14 @@ public class CourseGradingViewService(Teacher teacher, Course course)
         var dialog = new EditGradeCompositionDialog(_teacher, _course);
         dialog.ShowDialog();
         dialog.Closed += (sender, args) => onDialogClosed?.Invoke();
+    }
+
+    public decimal ShowComplexGradingDialog(Action? onDialogClosed = null)
+    {
+        var service = new CourseGradingService(_teacher, _course);
+        var dialog = new ComplexGradingDialog(service.GradeCompositions.ToList());
+        dialog.ShowDialog();
+        dialog.Closed += (sender, args) => onDialogClosed?.Invoke();
+        return dialog.GradeResult;
     }
 }

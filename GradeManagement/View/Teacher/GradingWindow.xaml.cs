@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
+using GradeManagement.Service.Teacher;
 using GradeManagement.Utils;
 using GradeManagement.ViewModel.Teacher;
 
@@ -87,8 +88,14 @@ public partial class GradingWindow : Window
 
     private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        GradeItem(sender);
+        if ((CourseGradingMethod)_course.GradingMethod == CourseGradingMethod.Score100)
+        {
+            var vm = this.ViewModelOf<GradingViewModel>()!;
+            vm.Grade100MarkSystemCommand.Execute(MainDataGrid.SelectedItem);
+        }
+        else
+        {
+            GradeItem(sender);
+        }
     }
-
-   
 }
