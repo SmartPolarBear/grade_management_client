@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,37 @@ public class CourseGradingService(Teacher teacher, Course course)
         }
 
         await _dbc.SaveChangesAsync();
+    }
+
+    public void ChangeGradeCompositionWeight(Tcgc tcgc, decimal weight)
+    {
+        tcgc.Weight = weight;
+        _dbc.Tcgcs.Update(tcgc);
+        _dbc.SaveChanges();
+    }
+
+    public void AddGradeComposition(GradeComposition gc, decimal weight)
+    {
+        if (_dbc.Tcgcs.Any(i => i.CourseId == _course.Id && i.GradeCompositionId == gc.Id))
+        {
+            throw new ArgumentException($"{gc.Name} is already exists.");
+        }
+
+        _dbc.Tcgcs.Add(new Tcgc
+        {
+            CourseId = _course.Id,
+            GradeCompositionId = gc.Id,
+            TeacherId = _teacher.Id,
+            Weight = weight
+        });
+
+        _dbc.SaveChanges();
+    }
+
+    public void RemoveGradeComposition(Tcgc itemToRemove)
+    {
+        _dbc.Tcgcs.Remove(itemToRemove);
+        _dbc.SaveChanges();
     }
 
     public IEnumerable<Stc> Stcs =>
@@ -81,4 +113,11 @@ public class CourseGradingService(Teacher teacher, Course course)
         from tcgc in _dbc.Tcgcs
         where tcgc.CourseId == _course.Id && tcgc.TeacherId == _teacher.Id
         select tcgc;
+
+    public IEnumerable<GradeComposition> UnusedGradeCompositions
+        => from gc in _dbc.GradeCompositions.ToList()
+            where !(from tcgc in _dbc.Tcgcs.ToList()
+                where tcgc.CourseId == _course.Id && tcgc.TeacherId == _teacher.Id
+                select tcgc.GradeCompositionId).Contains(gc.Id)
+            select gc;
 }

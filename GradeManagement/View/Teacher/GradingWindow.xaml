@@ -100,10 +100,12 @@
                             <TextBlock Margin="4">Grading Parts: </TextBlock>
                             <ListView
                                 MinHeight="64"
-                                ItemsSource="{Binding GradingCompositionDisplayNames}"
+                                ItemsSource="{Binding GradingCompositionDisplayNames,Mode=OneWay}"
                                 Margin="4">
                             </ListView>
-                            <Button Margin="4" Content="Edit"></Button>
+                            <Button Name="EditGradeCompositionButton" Margin="4" Content="Edit"
+                                    Command="{Binding EditGradeCompositionCommand}">
+                            </Button>
                         </StackPanel>
                     </Expander>
 

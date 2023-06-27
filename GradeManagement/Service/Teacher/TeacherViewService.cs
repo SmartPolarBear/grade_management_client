@@ -24,4 +24,6 @@ public sealed class TeacherViewService
         var dialog = new ChangeAccountInfoDialog(_teacher);
         dialog.ShowDialog();
     }
+    
+    
 }

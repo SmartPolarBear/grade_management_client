@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
+using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
 using GradeManagement.Service.Teacher;
+using GradeManagement.View.Teacher;
 
 namespace GradeManagement.ViewModel.Teacher;
 
@@ -18,6 +21,7 @@ public class GradingViewModel
 {
     private CourseGradingService _gradingService;
     private TeacherService _teacherService;
+    private CourseGradingViewService _gradingViewService;
 
     public GradingViewModel(Teacher teacher, Course course)
     {
@@ -26,6 +30,7 @@ public class GradingViewModel
 
         _teacherService = new TeacherService(TeacherData);
         _gradingService = new CourseGradingService(TeacherData, CourseData);
+        _gradingViewService = new CourseGradingViewService(TeacherData, CourseData);
     }
 
     public async void GradeStudent(decimal gradeResult, StudentWithGrade s)
@@ -34,6 +39,15 @@ public class GradingViewModel
         NotifyPropertyChanged(nameof(Students));
         NotifyPropertyChanged(nameof(GradedStudentCount));
         NotifyPropertyChanged(nameof(UngradedStudentCount));
+    }
+
+    private void EditGradeComposition()
+    {
+        _gradingViewService.ShowEditGradeCompositionDialog(() =>
+        {
+            NotifyPropertyChanged(nameof(GradingCompositionDisplayNames));
+        });
+        NotifyPropertyChanged(nameof(GradingCompositionDisplayNames));
     }
 
     public Teacher TeacherData { get; }
@@ -82,4 +96,7 @@ public class GradingViewModel
     public IEnumerable<string> GradingCompositionDisplayNames
         => from gc in _gradingService.GradeCompositions.ToList() // ToList() to avoid EF Core's fucking restrictions
             select $"{gc.Weight:F1}% - {gc.GradeComposition.Name}";
+
+
+    public ICommand EditGradeCompositionCommand => new DelegateCommand(_ => EditGradeComposition(), _ => true);
 }
