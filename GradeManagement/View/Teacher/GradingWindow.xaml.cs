@@ -61,12 +61,7 @@ public partial class GradingWindow : Window
         this.DataContext = new GradingViewModel(_teacher, _course);
     }
 
-    private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        this.Close();
-    }
-
-    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void GradeItem(object sender)
     {
         var student = (sender as Control)!.DataContextOf<StudentWithGrade>();
         var vm = this.ViewModelOf<GradingViewModel>()!;
@@ -83,5 +78,15 @@ public partial class GradingWindow : Window
             vm.GradeStudent((gradingWin as IGradingDialog)!.GradeResult,
                 student);
         }
+    }
+
+    private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        this.Close();
+    }
+
+    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        GradeItem(sender);
     }
 }

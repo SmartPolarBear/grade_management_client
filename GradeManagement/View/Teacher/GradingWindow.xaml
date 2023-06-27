@@ -138,16 +138,6 @@
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                         <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_OnMouseDoubleClick"></EventSetter>
-                        <Setter Property="ContextMenu">
-                            <Setter.Value>
-                                <ContextMenu>
-                                    <MenuItem Header="_Grade"></MenuItem>
-                                    <MenuItem Header="_Statistics"></MenuItem>
-                                    <Separator></Separator>
-                                    <MenuItem Header="_Export"></MenuItem>
-                                </ContextMenu>
-                            </Setter.Value>
-                        </Setter>
                     </Style>
                 </DataGrid.RowStyle>
             </DataGrid>
