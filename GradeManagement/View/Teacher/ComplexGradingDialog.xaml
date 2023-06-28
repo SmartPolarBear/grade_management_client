@@ -3,10 +3,75 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:behaviors="clr-namespace:GradeManagement.Utils.Behaviors"
+        xmlns:msbehaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:GradeManagement.View.Teacher"
         mc:Ignorable="d"
-        Title="ComplexGradingDialog" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel.Teacher"
+        d:DataContext="{d:DesignInstance Type=vm:ComplexGradingViewModel, IsDesignTimeCreatable=False}"
+        Title="Grading"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="300" MinHeight="300">
+
+    <msbehaviors:Interaction.Behaviors>
+        <behaviors:HideCloseButtonOnWindow></behaviors:HideCloseButtonOnWindow>
+    </msbehaviors:Interaction.Behaviors>
+
+    <DockPanel>
+        <StackPanel Margin="0,4"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    DockPanel.Dock="Bottom">
+            <Button Name="OkButton" Click="OkButton_OnClick" IsDefault="True" Margin="4,0" MinWidth="32">Ok</Button>
+            <Button Name="CancelButton" Click="CancelButton_OnClick" IsCancel="True" Margin="4,0" MinWidth="32">Cache</Button>
+        </StackPanel>
+
+        <StackPanel Margin="4" Orientation="Horizontal" DockPanel.Dock="Top">
+            <TextBlock>Total Grade: </TextBlock>
+            <TextBlock Text="{Binding DisplayValue}" />
+        </StackPanel>
+
+        <DataGrid
+            Margin="4"
+            AutoGenerateColumns="False"
+            IsReadOnly="False"
+            SelectionUnit="FullRow"
+            Name="MainDataGrid"
+            ItemsSource="{Binding  DisplayItems}"
+            SelectionMode="Single">
+
+            <DataGrid.Resources>
+                <Style x:Key="CustomErrorStyle" TargetType="{x:Type TextBox}">
+                    <Setter Property="Padding" Value="-2" />
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="Background" Value="Red" />
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RelativeSource={RelativeSource Self},
+            Path=(Validation.Errors)[0].ErrorContent}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Part"
+                                    Binding="{Binding Path= Item.GradeComposition.Name}">
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Grade"
+                                    EditingElementStyle="{StaticResource CustomErrorStyle}">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:GradeItemValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </Window>
