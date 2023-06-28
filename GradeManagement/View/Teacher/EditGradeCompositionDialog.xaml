@@ -5,12 +5,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GradeManagement.View.Teacher"
         mc:Ignorable="d"
+        xmlns:behaviors="clr-namespace:GradeManagement.Utils.Behaviors"
+        xmlns:msbehaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:GradeManagement.ViewModel.Teacher"
         d:DataContext="{d:DesignInstance Type=vm:EditGradeCompositionViewModel, IsDesignTimeCreatable=False}"
         Title="Edit Grade Composition" Height="400" Width="400"
         ResizeMode="NoResize"
         ShowInTaskbar="True"
         WindowStartupLocation="CenterScreen">
+    
+    <msbehaviors:Interaction.Behaviors>
+        <behaviors:HideCloseButtonOnWindow></behaviors:HideCloseButtonOnWindow>
+    </msbehaviors:Interaction.Behaviors>
+    
     <DockPanel>
         <StackPanel Margin="0,4"
                     HorizontalAlignment="Right"

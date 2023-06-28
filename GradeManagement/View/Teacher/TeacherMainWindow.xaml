@@ -226,7 +226,6 @@
                                     <Setter.Value>
                                         <ContextMenu>
                                             <MenuItem Header="_Grade"></MenuItem>
-                                            <MenuItem Header="_Statistics"></MenuItem>
                                             <Separator></Separator>
                                             <MenuItem Header="_Export"></MenuItem>
                                         </ContextMenu>
@@ -253,6 +252,11 @@
                                                 Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                         </DataGrid.Columns>
 
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                                <EventSetter Event="MouseDoubleClick" Handler="StudentDataGrid_MouseDoubleClick"></EventSetter>
+                            </Style>
+                        </DataGrid.RowStyle>
                     </DataGrid>
                 </TabItem>
             </TabControl>

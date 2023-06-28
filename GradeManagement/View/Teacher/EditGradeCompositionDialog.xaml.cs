@@ -13,25 +13,6 @@ using Course = Data.Model.Course;
 
 public partial class EditGradeCompositionDialog : Window
 {
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-    [DllImport("user32.dll")]
-    private static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
-
-    private const uint MF_BYCOMMAND = 0x00000000;
-    private const uint MF_GRAYED = 0x00000001;
-    private const uint SC_CLOSE = 0xF060;
-    private const int WM_SHOWWINDOW = 0x00000018;
-
-    protected override void OnSourceInitialized(EventArgs e)
-    {
-        base.OnSourceInitialized(e);
-        var hWnd = new WindowInteropHelper(this);
-        var sysMenu = GetSystemMenu(hWnd.Handle, false);
-        EnableMenuItem(sysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
-    }
-
     private readonly Teacher _teacher;
     private readonly Course _course;
 

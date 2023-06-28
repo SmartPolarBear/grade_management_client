@@ -19,7 +19,7 @@
         <Menu
             DockPanel.Dock="Top">
             <MenuItem Header="Data">
-                <MenuItem Header="_Statistics"></MenuItem>
+                <MenuItem Header="_Statistics" Name="StatisticMenuItem" Click="StatisticMenuItem_OnClick"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
             </MenuItem>

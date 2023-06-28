@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
@@ -35,5 +36,26 @@ public partial class TeacherMainWindow : Window
             this.ViewModelOf<TeacherMainViewModel>().FilterResultsCommand.Execute(
                 this.FilterToolBar);
         };
+    }
+
+    private void StudentDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var dgr = (sender as DataGridRow)!;
+        var stc = (dgr.DataContext as Data.Model.Stc)!;
+        var teacher = this.ViewModelOf<TeacherMainViewModel>().TeacherData;
+        
+        var grade = stc.Course.Scs.FirstOrDefault(g =>
+            g.CourseId == stc.CourseId && g.StudentId == stc.StudentId);
+        
+        if (grade == null)
+        {
+            MessageBox.Show($"Student {stc.Student.Name} is not graded yet.", "Grade",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        else
+        {
+            MessageBox.Show($"Student {stc.Student.Name} in course {stc.Course.Name} gets {grade.Score:F2}.", "Grade",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }

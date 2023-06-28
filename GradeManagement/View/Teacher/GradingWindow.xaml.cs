@@ -97,4 +97,10 @@ public partial class GradingWindow : Window
             GradeItem(sender);
         }
     }
+
+    private void StatisticMenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var win = new CourseStatisticWindow(_teacher, _course);
+        win.ShowDialog();
+    }
 }

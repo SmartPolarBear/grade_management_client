@@ -34,6 +34,8 @@ public sealed class ComplexGradingViewModel
         Items = composition;
         DisplayItems =
             new ObservableCollection<GradingItem>(composition.Select(i => new GradingItem(i, UpdateTotalValue)));
+
+        TotalValue = DisplayItems.Sum(i => i.Value * i.Item.Weight) / DisplayItems.Sum(i => i.Item.Weight);
     }
 
     private void UpdateTotalValue(decimal _)
