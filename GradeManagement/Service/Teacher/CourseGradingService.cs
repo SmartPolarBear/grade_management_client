@@ -10,6 +10,7 @@ namespace GradeManagement.Service.Teacher;
 
 using Teacher = Data.Model.Teacher;
 using Course = Data.Model.Course;
+using Student = Data.Model.Student;
 using GradeComposition = Data.Model.GradeComposition;
 
 public class CourseGradingService(Teacher teacher, Course course)

@@ -49,4 +49,32 @@ public static class CourseGradingMethodExtensions
             "5" => CourseGradingMethod.Score5,
             _ => throw new ArgumentOutOfRangeException(nameof(shortDisplayName), shortDisplayName, null)
         };
+
+    public static string? DisplayGrade(this CourseGradingMethod method, decimal? score)
+    {
+        return (CourseGradingMethod)method switch
+        {
+            CourseGradingMethod.Score100 => score switch
+            {
+                null => "N/A",
+                _ => score.ToString()
+            },
+            CourseGradingMethod.Score5 => score switch
+            {
+                null => "N/A",
+                >= 4.5m => "A", // 5
+                >= 3.5m => "B", // 4
+                >= 2.5m => "C", // 3
+                >= 1.5m => "D", // 2
+                _ => "F" // 1
+            },
+            CourseGradingMethod.PF => score switch
+            {
+                null => "N/A",
+                >= 0.5m => "Pass", // 1
+                _ => "Fail" // 0
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(method), method, null)
+        };
+    }
 }

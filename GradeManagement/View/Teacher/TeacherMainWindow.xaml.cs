@@ -11,10 +11,10 @@ namespace GradeManagement.View.Teacher;
 
 public partial class TeacherMainWindow : Window
 {
-    public TeacherMainWindow(TeacherUser? user)
+    public TeacherMainWindow(TeacherUser user)
     {
         InitializeComponent();
-        this.DataContext = new TeacherMainViewModel(user!);
+        this.DataContext = new TeacherMainViewModel(user);
     }
 
     private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)

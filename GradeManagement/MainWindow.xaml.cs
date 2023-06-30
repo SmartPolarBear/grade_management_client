@@ -43,8 +43,8 @@ namespace GradeManagement
                 Window? window = user!.Type switch
                 {
                     UserType.Admin => new AdminMainWindow(),
-                    UserType.Student => new StudentMainWindow(),
-                    UserType.Teacher => new TeacherMainWindow(user as TeacherUser),
+                    UserType.Student => new StudentMainWindow((user as StudentUser)!),
+                    UserType.Teacher => new TeacherMainWindow((user as TeacherUser)!),
                     _ => throw new ArgumentOutOfRangeException(nameof(args),
                         (args as LoginSucceededEventArgs)!.User!.Type, "No window for this user type")
                 };

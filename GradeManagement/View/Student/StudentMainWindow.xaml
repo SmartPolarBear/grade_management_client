@@ -4,9 +4,87 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GradeManagement.View.Student"
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel.Student"
+        xmlns:converter="clr-namespace:GradeManagement.Utils.Converter"
+        d:DataContext="{d:DesignInstance Type=vm:StudentMainViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        Title="StudentMainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="{Binding WindowTitle, Mode=OneTime}" Height="450" Width="800">
+
+    <Window.Resources>
+        <converter:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu
+            DockPanel.Dock="Top">
+            <MenuItem Header="_Data">
+                <MenuItem Header="_Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Account">
+                <MenuItem Header="_Change Password" Command="{Binding ChangePasswordCommand}"></MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <ToolBarTray
+            DockPanel.Dock="Top">
+            <ToolBar>
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <StatusBar
+            DockPanel.Dock="Bottom">
+
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer>
+                <StackPanel>
+                    <Expander
+                        Header="Personal Information"
+                        ExpandDirection="Down"
+                        IsExpanded="True">
+
+                    </Expander>
+
+                    <Expander
+                        Header="Statistics"
+                        ExpandDirection="Down"
+                        IsExpanded="True">
+
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+
+
+            <GridSplitter Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          ShowsPreview="True"
+                          Width="5" />
+
+            <DataGrid
+                Grid.Column="2"
+                IsReadOnly="True"
+                SelectionMode="Single"
+                ItemsSource="{Binding Courses.View}"
+                AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Course.Id}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Course.Name}" />
+                    <DataGridTextColumn Header="Term" Binding="{Binding Course.Term}" />
+                    <DataGridTextColumn Header="Credit" Binding="{Binding Course.Credit}" />
+                    <DataGridTextColumn Header="Grading Method"
+                                        Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                    <DataGridTextColumn Header="Grade" Binding="{Binding DisplayGrade}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </Window>

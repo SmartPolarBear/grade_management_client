@@ -1,4 +1,6 @@
-﻿#define DEBUG_TEACHER
+﻿// #define DEBUG_TEACHER
+
+#define DEBUG_STUDENT
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Windows;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
 using GradeManagement.Service.Login;
+using GradeManagement.View.Student;
 using Microsoft.Extensions.Configuration;
 
 namespace GradeManagement
@@ -31,7 +34,15 @@ namespace GradeManagement
         {
             var loginService = new LoginService("teacher", Data.UserType.Teacher);
             var teacher = loginService.Login("12345678");
-            var teacherWindow = new View.Teacher.TeacherMainWindow(teacher as TeacherUser);
+            var teacherWindow = new View.Teacher.TeacherMainWindow((teacher as TeacherUser)!);
+            teacherWindow.Show();
+        }
+        
+        private void DebugDirectlyLoadStudent()
+        {
+            var loginService = new LoginService("student", Data.UserType.Student);
+            var teacher = loginService.Login("12345678");
+            var teacherWindow = new StudentMainWindow((teacher as StudentUser)!);
             teacherWindow.Show();
         }
 
@@ -39,10 +50,14 @@ namespace GradeManagement
         {
 #if DEBUG_TEACHER
             DebugDirectlyLoadTeacher();
+#elif DEBUG_STUDENT
+            DebugDirectlyLoadStudent();
 #else
             var loginWindow = new MainWindow();
             loginWindow.ShowDialog();
 #endif
         }
+
+        
     }
 }
