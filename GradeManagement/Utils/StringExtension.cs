@@ -4,7 +4,7 @@ namespace GradeManagement.Utils;
 
 public static partial class StringExtension
 {
-    public static bool ValidateEmail(this string email)
+    public static bool ValidateEmail(this string? email)
     {
         return EmailRegex().IsMatch(email);
     }

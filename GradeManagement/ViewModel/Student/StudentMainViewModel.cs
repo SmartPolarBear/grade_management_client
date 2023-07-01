@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Input;
+using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
 using GradeManagement.Service.Student;
+using GradeManagement.Utils;
 
 namespace GradeManagement.ViewModel.Student;
 
@@ -24,11 +27,13 @@ public class StudentMainViewModel
     : ViewModelBase
 {
     private readonly StudentService _service;
+    private readonly StudentViewService _viewService;
 
     public StudentMainViewModel(StudentUser user)
     {
         StudentData = (user.Data as Student)!;
         _service = new StudentService(StudentData);
+        _viewService = new StudentViewService(StudentData);
 
         _courses = new CollectionViewSource
         {
@@ -39,6 +44,10 @@ public class StudentMainViewModel
         {
             FilterTerm = AllTerms.First();
         }
+
+        UpdateEmailCommand = new DelegateCommand((addr) => UpdateEmail(addr as string),
+            s =>
+                s != null && s.ToString().ValidateEmail());
     }
 
     private IEnumerable<CourseWithGrade> GetFilteredItems()
@@ -57,7 +66,7 @@ public class StudentMainViewModel
 
         if (IsKeywordFiltering)
         {
-            courses = courses.Where(c => 
+            courses = courses.Where(c =>
                 c.Course.Name.ToLower().Trim().Contains(FilterKeyword.ToLower().Trim()));
         }
 
@@ -101,6 +110,14 @@ public class StudentMainViewModel
 
         UpdateGrouping();
     }
+
+    private void UpdateEmail(string? newEmail)
+    {
+        StudentData.Email = newEmail!;
+        _service.UpdateEmail(newEmail!);
+        NotifyPropertyChanged(nameof(StudentData));
+    }
+
 
     public string WindowTitle
         => $"Grade Management - {StudentData.Name} ({StudentData.Id})";
@@ -234,4 +251,10 @@ public class StudentMainViewModel
 
     public string DisplayGpa
         => $"{_service.Gpa:F2}";
+
+    public DelegateCommand UpdateEmailCommand { get; }
+
+    public DelegateCommand ChangePasswordCommand
+        => new DelegateCommand((_) => _viewService.ShowChangePasswordDialog(),
+            (_) => true);
 }

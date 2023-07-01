@@ -6,12 +6,14 @@
         xmlns:local="clr-namespace:GradeManagement.View.Student"
         xmlns:vm="clr-namespace:GradeManagement.ViewModel.Student"
         xmlns:converter="clr-namespace:GradeManagement.Utils.Converter"
+        xmlns:validation="clr-namespace:GradeManagement.Utils.Validation"
         d:DataContext="{d:DesignInstance Type=vm:StudentMainViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="{Binding WindowTitle, Mode=OneTime}" Height="450" Width="800">
 
     <Window.Resources>
         <converter:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
+        <converter:EqualityMultiConverter x:Key="EqualityMultiConverter" Inverse="True"></converter:EqualityMultiConverter>
     </Window.Resources>
 
     <DockPanel>
@@ -135,16 +137,35 @@
 
                                 <Button
                                     HorizontalAlignment="Right"
+                                    Content="Update"
+                                    Command="{Binding UpdateEmailCommand}"
+                                    CommandParameter="{Binding ElementName=EmailTextBox,Path=Text}"
                                     DockPanel.Dock="Right">
-                                    Modify
+                                    <Button.IsEnabled>
+                                        <MultiBinding Converter="{StaticResource EqualityMultiConverter}">
+                                            <Binding ElementName="EmailTextBox" Path="Text"></Binding>
+                                            <Binding Path="StudentData.Email"></Binding>
+                                        </MultiBinding>
+                                    </Button.IsEnabled>
                                 </Button>
 
                                 <TextBox
+                                    Name="EmailTextBox"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Stretch"
-                                    IsReadOnly="True"
+                                    IsReadOnly="False"
                                     Margin="4,0"
-                                    Text="{Binding StudentData.Email}">
+                                    Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                    Style="{StaticResource ValidationTextBoxStyle}"
+                                    TextChanged="EmailTextBox_OnTextChanged">
+                                    <TextBox.Text>
+                                        <Binding Path="StudentData.Email" Mode="OneWay"
+                                                 UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:EmailValidationRule></validation:EmailValidationRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
                                 </TextBox>
                             </DockPanel>
                         </StackPanel>

@@ -47,5 +47,11 @@ public sealed class StudentService(Student student)
                 select ((CourseGradingMethod)course.GradingMethod).ScoreToGpa(sc.Score!))
             .Average(i => i.Value);
 
-    
+
+    public void UpdateEmail(string newEmail)
+    {
+        _student.Email = newEmail;
+        _dbc.Entry(_student).State = EntityState.Modified;
+        _dbc.SaveChanges();
+    }
 }

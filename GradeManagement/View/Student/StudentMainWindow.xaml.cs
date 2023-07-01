@@ -1,5 +1,7 @@
 using System.Windows;
+using System.Windows.Controls;
 using GradeManagement.Data;
+using GradeManagement.Utils;
 using GradeManagement.ViewModel.Student;
 
 namespace GradeManagement.View.Student;
@@ -15,5 +17,10 @@ public partial class StudentMainWindow : Window
     private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
+    }
+
+    private void EmailTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        this.DataContextOf<StudentMainViewModel>().UpdateEmailCommand.RaiseCanExecuteChanged();
     }
 }
