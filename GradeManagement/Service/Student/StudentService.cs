@@ -39,4 +39,13 @@ public sealed class StudentService(Student student)
     public IEnumerable<Teacher> Teachers
         => from stc in _student.Stcs
             select stc.Teacher;
+
+    public decimal Gpa
+        => (from sc in _student.Scs
+                join course in _dbc.Courses on sc.CourseId equals course.Id
+                where (CourseGradingMethod)course.GradingMethod != CourseGradingMethod.PF
+                select ((CourseGradingMethod)course.GradingMethod).ScoreToGpa(sc.Score!))
+            .Average(i => i.Value);
+
+    
 }

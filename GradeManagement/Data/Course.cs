@@ -77,4 +77,33 @@ public static class CourseGradingMethodExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(method), method, null)
         };
     }
+
+    public static decimal? ScoreToGpa(this CourseGradingMethod gm, decimal Score)
+    {
+        return gm switch
+        {
+            CourseGradingMethod.Score5 => Score switch
+            {
+                >= 3.5m => 4.0m,
+                >= 2.5m => 3.0m,
+                >= 1.5m => 2.0m,
+                >= 0.5m => 1.0m,
+                _ => 0.0m
+            },
+            CourseGradingMethod.Score100 => Score switch
+            {
+                >= 90m => 4.0m,
+                >= 85m => 3.7m,
+                >= 81m => 3.3m,
+                >= 78m => 3.0m,
+                >= 75m => 2.7m,
+                >= 72m => 2.3m,
+                >= 68m => 2.0m,
+                >= 64m => 1.7m,
+                >= 60m => 1.0m,
+                _ => 0.0m
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(gm), gm, "Invalid Grading Method for GPA calculation")
+        };
+    }
 }

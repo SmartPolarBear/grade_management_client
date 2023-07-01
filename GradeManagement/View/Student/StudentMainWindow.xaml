@@ -28,6 +28,58 @@
         <ToolBarTray
             DockPanel.Dock="Top">
             <ToolBar>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <CheckBox VerticalAlignment="Center"
+                              Name="GroupCheckBox"
+                              IsChecked="{Binding IsGrouping, Mode=TwoWay}"
+                              Margin="4,0">
+                        Group:
+                    </CheckBox>
+                    <ComboBox
+                        IsEnabled="{Binding ElementName=GroupCheckBox,Path=IsChecked}"
+                        VerticalAlignment="Center"
+                        MinWidth="64"
+                        SelectedIndex="{Binding GroupingMode, Mode=TwoWay}"
+                        IsReadOnly="True">
+                        <ComboBoxItem>Term</ComboBoxItem>
+                        <ComboBoxItem>Credit</ComboBoxItem>
+                        <ComboBoxItem>Grading Method</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <Separator></Separator>
+
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <CheckBox VerticalAlignment="Center"
+                              Name="TermFilterCheckBox"
+                              IsChecked="{Binding IsTermFiltering, Mode=TwoWay}"
+                              Margin="4,0">
+                        Filter Term:
+                    </CheckBox>
+                    <ComboBox
+                        IsEnabled="{Binding ElementName=TermFilterCheckBox,Path=IsChecked}"
+                        VerticalAlignment="Center"
+                        MinWidth="64"
+                        ItemsSource="{Binding AllTerms}"
+                        SelectedItem="{Binding FilterTerm, Mode=TwoWay}"
+                        IsReadOnly="True">
+                    </ComboBox>
+
+                    <CheckBox VerticalAlignment="Center"
+                              Name="KeywordFilterCheckBox"
+                              IsChecked="{Binding IsKeywordFiltering, Mode=TwoWay}"
+                              Margin="4,0">
+                        Filter Keyword:
+                    </CheckBox>
+                    <TextBox
+                        IsEnabled="{Binding ElementName=KeywordFilterCheckBox,Path=IsChecked}"
+                        VerticalAlignment="Center"
+                        MinWidth="64"
+                        Text="{Binding FilterKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </TextBox>
+                </StackPanel>
 
             </ToolBar>
         </ToolBarTray>
@@ -50,14 +102,106 @@
                         Header="Personal Information"
                         ExpandDirection="Down"
                         IsExpanded="True">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="ID: "></TextBlock>
+                                <TextBlock Text="{Binding StudentData.Id}"></TextBlock>
+                            </StackPanel>
 
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Name: "></TextBlock>
+                                <TextBlock Text="{Binding StudentData.Name}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Age: "></TextBlock>
+                                <TextBlock Text="{Binding StudentData.Age}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Gender: "></TextBlock>
+                                <TextBlock Text="{Binding StudentGender}"></TextBlock>
+                            </StackPanel>
+
+                            <DockPanel Margin="4">
+                                <TextBlock Text="E-Mail: "
+                                           VerticalAlignment="Center"
+                                           DockPanel.Dock="Left">
+                                </TextBlock>
+
+                                <Button
+                                    HorizontalAlignment="Right"
+                                    DockPanel.Dock="Right">
+                                    Modify
+                                </Button>
+
+                                <TextBox
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
+                                    IsReadOnly="True"
+                                    Margin="4,0"
+                                    Text="{Binding StudentData.Email}">
+                                </TextBox>
+                            </DockPanel>
+                        </StackPanel>
+                    </Expander>
+
+                    <Expander
+                        Header="Courses"
+                        ExpandDirection="Down"
+                        IsExpanded="True">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Total Courses: "></TextBlock>
+                                <TextBlock Text="{Binding TotalCourseCount}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Total Credits: "></TextBlock>
+                                <TextBlock Text="{Binding  TotalCredit}"></TextBlock>
+                            </StackPanel>
+
+                            <Separator></Separator>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Graded Course: "></TextBlock>
+                                <TextBlock Text="{Binding  GradedCourseCount}"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Ungraded Course: "></TextBlock>
+                                <TextBlock Text="{Binding  UngradedCourseCount}"></TextBlock>
+                            </StackPanel>
+
+
+                        </StackPanel>
                     </Expander>
 
                     <Expander
                         Header="Statistics"
                         ExpandDirection="Down"
                         IsExpanded="True">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="GPA: "></TextBlock>
+                                <TextBlock Text="{Binding DisplayGpa}"></TextBlock>
+                            </StackPanel>
 
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="4">
+                                <TextBlock Text="Average Scores: "></TextBlock>
+                                <TextBlock Text="{Binding  AverageScore}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
                     </Expander>
                 </StackPanel>
             </ScrollViewer>
@@ -84,6 +228,37 @@
                                         Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                     <DataGridTextColumn Header="Grade" Binding="{Binding DisplayGrade}" />
                 </DataGrid.Columns>
+
+                <DataGrid.GroupStyle>
+                    <!-- Style for groups at top level. -->
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Margin" Value="0,0,0,5" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock FontWeight="Bold" Text="{Binding Path=Name}"
+                                                                   Margin="4,0" Width="100" />
+                                                        <TextBlock FontWeight="Bold" Text="{Binding Path=ItemCount}" />
+                                                        <TextBlock Text=" Records"></TextBlock>
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+
             </DataGrid>
         </Grid>
     </DockPanel>

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
+using GradeManagement.Service.Student;
 
 namespace GradeManagement.ViewModel.Student;
 
@@ -13,47 +15,214 @@ public sealed record CourseWithGrade(Course Course, decimal? Grade)
 {
     public string DisplayGrade
         => ((CourseGradingMethod)Course.GradingMethod).DisplayGrade(Grade) ?? "N/A";
+
+    public string DisplayGradingMethod
+        => ((CourseGradingMethod)Course.GradingMethod).ToDisplayName();
 }
 
 public class StudentMainViewModel
     : ViewModelBase
 {
-    private readonly Student _user;
+    private readonly StudentService _service;
 
     public StudentMainViewModel(StudentUser user)
     {
-        _user = (user.Data as Student)!;
+        StudentData = (user.Data as Student)!;
+        _service = new StudentService(StudentData);
 
-        Courses = new CollectionViewSource
+        _courses = new CollectionViewSource
         {
-            Source = from stc in _user.Stcs
-                join sc in _user.Scs on new { stc.StudentId, stc.CourseId } equals new { sc.StudentId, sc.CourseId }
-                    into scs
-                from matched in scs.DefaultIfEmpty()
-                select new CourseWithGrade(stc.Course, matched?.Score)
+            Source = GetFilteredItems()
         };
+
+        if (AllTerms.Any())
+        {
+            FilterTerm = AllTerms.First();
+        }
+    }
+
+    private IEnumerable<CourseWithGrade> GetFilteredItems()
+    {
+        var courses = from stc in StudentData.Stcs
+            join sc in StudentData.Scs on new { stc.StudentId, stc.CourseId } equals new
+                    { sc.StudentId, sc.CourseId }
+                into scs
+            from matched in scs.DefaultIfEmpty()
+            select new CourseWithGrade(stc.Course, matched?.Score);
+
+        if (IsTermFiltering)
+        {
+            courses = courses.Where(c => c.Course.Term == FilterTerm);
+        }
+
+        if (IsKeywordFiltering)
+        {
+            courses = courses.Where(c => 
+                c.Course.Name.ToLower().Trim().Contains(FilterKeyword.ToLower().Trim()));
+        }
+
+        return courses;
+    }
+
+    private void UpdateGrouping()
+    {
+        var view = _courses.View;
+        view.GroupDescriptions.Clear();
+        if (!IsGrouping)
+        {
+            return;
+        }
+
+        if (GroupingMode == 0)
+        {
+            view.GroupDescriptions.Add(new PropertyGroupDescription("Course.Term"));
+        }
+        else if (GroupingMode == 1)
+        {
+            view.GroupDescriptions.Add(new PropertyGroupDescription("Course.Credit"));
+        }
+        else if (GroupingMode == 2)
+        {
+            view.GroupDescriptions.Add(new PropertyGroupDescription("DisplayGradingMethod"));
+        }
+
+        view.Refresh();
+
+        NotifyPropertyChanged(nameof(Courses));
+    }
+
+    private void UpdateFilter()
+    {
+        _courses = new CollectionViewSource
+        {
+            Source = GetFilteredItems()
+        };
+        NotifyPropertyChanged(nameof(Courses));
+
+        UpdateGrouping();
     }
 
     public string WindowTitle
-        => $"Grade Management - {_user.Name} ({_user.Id})";
+        => $"Grade Management - {StudentData.Name} ({StudentData.Id})";
 
-    public Student StudentData
-        => _user;
+    public Student StudentData { get; }
+
+    public string StudentGender
+        => ((Gender)StudentData.Gender).DisplayName();
+
 
     public decimal AverageScore
-        => (from sc in _user.Scs select sc.Score).Average();
+        => (from sc in _service.Grades
+            join c in _service.Courses on sc.CourseId equals c.Id
+            where (CourseGradingMethod)c.GradingMethod != CourseGradingMethod.PF
+            select ((CourseGradingMethod)c.GradingMethod)switch
+            {
+                CourseGradingMethod.Score5 => sc.Score * 20,
+                CourseGradingMethod.Score100 => sc.Score,
+                _ => throw new ArgumentOutOfRangeException()
+            }).Average();
 
     public decimal TotalCredit
-        => (from sc in _user.Scs select sc.Course.Credit).Sum(Convert.ToDecimal);
+        => (from c in _service.Courses select c.Credit).Sum(Convert.ToDecimal);
 
     public int GradedCourseCount
-        => (from sc in _user.Scs select sc).Count();
+        => _service.Grades.Count();
 
     public int TotalCourseCount
-        => (from stc in _user.Stcs select stc).Count();
+        => _service.Courses.Count();
 
     public int UngradedCourseCount
         => TotalCourseCount - GradedCourseCount;
+
+    public IEnumerable<string> AllTerms
+        => _service.Courses.Select(c => c.Term).Distinct();
+
+
+    private bool _isGrouping = false;
+
+    public bool IsGrouping
+    {
+        get => _isGrouping;
+        set
+        {
+            SetProperty(ref _isGrouping, value);
+            UpdateGrouping();
+        }
+    }
+
+    private int _groupingMode = 0;
+
+    public int GroupingMode
+    {
+        get => _groupingMode;
+        set
+        {
+            SetProperty(ref _groupingMode, value);
+            UpdateGrouping();
+        }
+    }
+
+
+    private bool _isTermFiltering = false;
+
+    public bool IsTermFiltering
+    {
+        get => _isTermFiltering;
+        set
+        {
+            SetProperty(ref _isTermFiltering, value);
+            UpdateFilter();
+        }
+    }
+
+    private string _filterTerm = string.Empty;
+
+    public string FilterTerm
+    {
+        get => _filterTerm;
+        set
+        {
+            SetProperty(ref _filterTerm, value);
+            UpdateFilter();
+        }
+    }
+
+    private string _filterName = string.Empty;
+
+    public string FilterName
+    {
+        get => _filterName;
+        set
+        {
+            SetProperty(ref _filterName, value);
+            UpdateFilter();
+        }
+    }
+
+    private bool _isKeywordFiltering = false;
+
+    public bool IsKeywordFiltering
+    {
+        get => _isKeywordFiltering;
+        set
+        {
+            SetProperty(ref _isKeywordFiltering, value);
+            UpdateFilter();
+        }
+    }
+
+    private string _filterKeyword = string.Empty;
+
+    public string FilterKeyword
+    {
+        get => _filterKeyword;
+        set
+        {
+            SetProperty(ref _filterKeyword, value);
+            UpdateFilter();
+        }
+    }
+
 
     private CollectionViewSource _courses;
 
@@ -62,4 +231,7 @@ public class StudentMainViewModel
         get => _courses;
         set => SetProperty(ref _courses, value);
     }
+
+    public string DisplayGpa
+        => $"{_service.Gpa:F2}";
 }
