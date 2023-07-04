@@ -42,7 +42,7 @@ namespace GradeManagement
                 var user = (args as LoginSucceededEventArgs)!.User;
                 Window? window = user!.Type switch
                 {
-                    UserType.Admin => new AdminMainWindow(),
+                    UserType.Admin => new AdminMainWindow((user as AdminUser)!),
                     UserType.Student => new StudentMainWindow((user as StudentUser)!),
                     UserType.Teacher => new TeacherMainWindow((user as TeacherUser)!),
                     _ => throw new ArgumentOutOfRangeException(nameof(args),

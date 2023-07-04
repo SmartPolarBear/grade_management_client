@@ -6,7 +6,47 @@
         xmlns:local="clr-namespace:GradeManagement.View.Admin"
         mc:Ignorable="d"
         Title="AdminMainWindow" Height="450" Width="800">
-    <Grid>
+    <DockPanel>
+        <Menu
+            DockPanel.Dock="Top">
+            <MenuItem Header="Data">
+                <MenuItem Header="Add _Course"></MenuItem>
+                <MenuItem Header="Add _Teacher"></MenuItem>
+                <MenuItem Header="Add _Student"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Exit"></MenuItem>
+            </MenuItem>
+        </Menu>
         
-    </Grid>
+        <ToolBarTray
+            DockPanel.Dock="Top">
+            <ToolBar>
+                
+            </ToolBar>
+        </ToolBarTray>
+        
+        <StatusBar
+            DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock>AAA</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        
+        <Grid>
+            <TabControl>
+                <TabItem
+                    Header="Courses">
+                    
+                </TabItem>
+                <TabItem
+                    Header="Students">
+                    
+                </TabItem>
+                <TabItem
+                    Header="Audit">
+                    
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
 </Window>

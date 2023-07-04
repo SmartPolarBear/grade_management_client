@@ -1,5 +1,7 @@
 ﻿// #define DEBUG_TEACHER
-#define DEBUG_STUDENT
+// #define DEBUG_STUDENT
+
+#define DEBUG_ADMIN
 
 using System;
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ namespace GradeManagement
             var teacherWindow = new View.Teacher.TeacherMainWindow((teacher as TeacherUser)!);
             teacherWindow.Show();
         }
-        
+
         private void DebugDirectlyLoadStudent()
         {
             var loginService = new LoginService("student", Data.UserType.Student);
@@ -45,18 +47,26 @@ namespace GradeManagement
             teacherWindow.Show();
         }
 
+        private void DebugDirectlyLoadAdmin()
+        {
+            var loginService = new LoginService("admin", Data.UserType.Admin);
+            var teacher = loginService.Login("12345678");
+            var adminWindow = new View.Admin.AdminMainWindow((teacher as AdminUser)!);
+            adminWindow.Show();
+        }
+
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
 #if DEBUG_TEACHER
             DebugDirectlyLoadTeacher();
 #elif DEBUG_STUDENT
             DebugDirectlyLoadStudent();
+#elif DEBUG_ADMIN
+            DebugDirectlyLoadAdmin();
 #else
             var loginWindow = new MainWindow();
             loginWindow.ShowDialog();
 #endif
         }
-
-        
     }
 }

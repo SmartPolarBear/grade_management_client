@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <Folder Include="Data\Model\" />
+      <Folder Include="View\Common\" />
     </ItemGroup>
 
     <ItemGroup>
