@@ -11,7 +11,7 @@
         ShowInTaskbar="True"
         x:Name="AddStudentDialogWindow"
         WindowStartupLocation="CenterOwner"
-        Title="Add Teacher" MinHeight="200" MinWidth="300">
+        Title="Add Student" MinHeight="200" MinWidth="300">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom">
             <Separator Margin="8"></Separator>
@@ -28,7 +28,7 @@
                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
                 Style="{StaticResource ValidationTextBoxStyle}">
                 <TextBox.Text>
-                    <Binding ElementName="AddTeacherDialogWindow" Path="Teacher.Id" Mode="TwoWay"
+                    <Binding ElementName="AddStudentDialogWindow" Path="Student.Id" Mode="TwoWay"
                              UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <validation:NumericIdValidationRule ValidateId="NumericIdValidationRule_OnValidateId"></validation:NumericIdValidationRule>
@@ -38,14 +38,14 @@
             </TextBox>
             <TextBlock>Name:</TextBlock>
             <TextBox
-                Text="{Binding ElementName=AddTeacherDialogWindow,Path=Teacher.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                Text="{Binding ElementName=AddStudentDialogWindow,Path=Student.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
             </TextBox>
             <TextBlock>E-Mail:</TextBlock>
             <TextBox
                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
                 Style="{StaticResource ValidationTextBoxStyle}">
                 <TextBox.Text>
-                    <Binding ElementName="AddTeacherDialogWindow" Path="Teacher.Email" Mode="TwoWay"
+                    <Binding ElementName="AddStudentDialogWindow" Path="Student.Email" Mode="TwoWay"
                              UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <validation:EmailValidationRule></validation:EmailValidationRule>
@@ -53,9 +53,29 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
+            <TextBlock>Age:</TextBlock>
+            <TextBox
+                Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                Style="{StaticResource ValidationTextBoxStyle}">
+                <TextBox.Text>
+                    <Binding ElementName="AddStudentDialogWindow" Path="Student.Age" Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:NumericValidationRule></validation:NumericValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Gender:</TextBlock>
+            <ComboBox IsEditable="False"
+                      Name="GenderComboBox"
+                      SelectionChanged="GenderComboBox_OnSelectionChanged">
+                <ComboBoxItem>Female</ComboBoxItem>
+                <ComboBoxItem>Male</ComboBoxItem>
+            </ComboBox>
             <TextBlock>Password:</TextBlock>
             <TextBox
-                Text="{Binding ElementName=AddTeacherDialogWindow,Path=Teacher.Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                Text="{Binding ElementName=AddStudentDialogWindow,Path=Student.Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
             </TextBox>
         </StackPanel>
     </DockPanel>
