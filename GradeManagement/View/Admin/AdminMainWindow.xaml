@@ -25,6 +25,10 @@
                 <Separator></Separator>
                 <MenuItem Header="Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
             </MenuItem>
+            
+            <MenuItem Header="Account">
+                <MenuItem Header="_Change Password" Name="ChangePasswordMenuItem" Click="ChangePasswordMenuItem_OnClick"></MenuItem>
+            </MenuItem>
         </Menu>
 
         <ToolBarTray

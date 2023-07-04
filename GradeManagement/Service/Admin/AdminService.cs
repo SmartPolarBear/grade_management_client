@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
+using Microsoft.EntityFrameworkCore;
 using Course = GradeManagement.Data.Model.Course;
 
 namespace GradeManagement.Service.Admin;
@@ -18,6 +20,36 @@ public sealed class AdminService
     {
         _admin = admin;
         _dbc = new GradeManagementContext(UserType.Admin);
+    }
+
+    public void AddCourse(Course course)
+    {
+        _dbc.Courses.Add(course);
+        _dbc.SaveChanges();
+    }
+
+    public void AddStudent(Student student)
+    {
+        _dbc.Students.Add(student);
+        _dbc.SaveChanges();
+    }
+
+    public void AddTeacher(Teacher teacher)
+    {
+        _dbc.Teachers.Add(teacher);
+        _dbc.SaveChanges();
+    }
+
+    public bool ValidatePassword(string password)
+    {
+        return _admin.Password == password;
+    }
+
+    public async Task<bool> ChangePasswordAsync(string newPassword)
+    {
+        _admin.Password = newPassword;
+        _dbc.Entry(_admin).State = EntityState.Modified;
+        return await _dbc.SaveChangesAsync() > 0;
     }
 
 
