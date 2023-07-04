@@ -20,14 +20,16 @@
             DockPanel.Dock="Top">
             <MenuItem Header="Data">
                 <MenuItem Header="Add _Course"></MenuItem>
-                <MenuItem Header="Add _Teacher"></MenuItem>
-                <MenuItem Header="Add _Student"></MenuItem>
+                <MenuItem Header="Add _Teacher" Command="{Binding AddTeacherCommand}"></MenuItem>
+                <MenuItem Header="Add _Student" Command="{Binding AddStudentCommand}"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
             </MenuItem>
-            
+
             <MenuItem Header="Account">
-                <MenuItem Header="_Change Password" Name="ChangePasswordMenuItem" Click="ChangePasswordMenuItem_OnClick"></MenuItem>
+                <MenuItem Header="_Change Password" Name="ChangePasswordMenuItem"
+                          Click="ChangePasswordMenuItem_OnClick">
+                </MenuItem>
             </MenuItem>
         </Menu>
 

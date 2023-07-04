@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using GradeManagement.Base.Command;
 using GradeManagement.Base.ViewModel;
 using GradeManagement.Data;
 using GradeManagement.Data.Model;
@@ -17,11 +18,14 @@ public class AdminMainViewModel
     : ViewModelBase
 {
     private readonly AdminService _service;
+    private readonly AdminViewService _viewService;
 
     public AdminMainViewModel(AdminUser admin)
     {
         AdminData = (admin.Data as Admin)!;
+
         _service = new AdminService(AdminData);
+        _viewService = new AdminViewService(AdminData);
 
         Audit = new ObservableCollection<Scaudit>(_service.Audits);
         Courses = new ObservableCollection<Course>(_service.Courses);
@@ -29,7 +33,25 @@ public class AdminMainViewModel
         Teachers = new ObservableCollection<Teacher>(_service.Teachers);
     }
 
+    public void AddStudent()
+    {
+        var student = _viewService.ShowAddStudentDialog();
+        if (student is null) return;
+        _service.AddStudent(student);
+        Students.Add(student);
+    }
+
+    public void AddTeacher()
+    {
+        var teacher = _viewService.ShowAddTeacherDialog();
+        if (teacher is null) return;
+        _service.AddTeacher(teacher);
+        Teachers.Add(teacher);
+    }
+
     public Admin AdminData { get; }
+    
+    public string WindowTitle => $"Administrator - {AdminData.Name}";
 
     public ObservableCollection<Scaudit> Audit { get; }
 
@@ -38,4 +60,8 @@ public class AdminMainViewModel
     public ObservableCollection<Student> Students { get; }
 
     public ObservableCollection<Teacher> Teachers { get; }
+
+    public DelegateCommand AddStudentCommand => new(_ => AddStudent(), _ => true);
+
+    public DelegateCommand AddTeacherCommand => new(_ => AddTeacher(), _ => true);
 }

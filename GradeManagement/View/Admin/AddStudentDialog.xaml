@@ -1,0 +1,62 @@
+<Window x:Class="GradeManagement.View.Admin.AddStudentDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:GradeManagement.View.Admin"
+        mc:Ignorable="d"
+        xmlns:validation="clr-namespace:GradeManagement.Utils.Validation"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        x:Name="AddStudentDialogWindow"
+        WindowStartupLocation="CenterOwner"
+        Title="Add Teacher" MinHeight="200" MinWidth="300">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <Separator Margin="8"></Separator>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="OkButton" IsDefault="True" Width="64" Margin="4" Click="OkButton_OnClick">OK</Button>
+                <Button Name="CancelButton" IsCancel="True" Width="64" Margin="4" Click="CancelButton_OnClick">Cancel</Button>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Margin="4">
+            <TextBlock>ID:</TextBlock>
+            <TextBox
+                Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                Style="{StaticResource ValidationTextBoxStyle}">
+                <TextBox.Text>
+                    <Binding ElementName="AddTeacherDialogWindow" Path="Teacher.Id" Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:NumericIdValidationRule ValidateId="NumericIdValidationRule_OnValidateId"></validation:NumericIdValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Name:</TextBlock>
+            <TextBox
+                Text="{Binding ElementName=AddTeacherDialogWindow,Path=Teacher.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            </TextBox>
+            <TextBlock>E-Mail:</TextBlock>
+            <TextBox
+                Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                Style="{StaticResource ValidationTextBoxStyle}">
+                <TextBox.Text>
+                    <Binding ElementName="AddTeacherDialogWindow" Path="Teacher.Email" Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:EmailValidationRule></validation:EmailValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Password:</TextBlock>
+            <TextBox
+                Text="{Binding ElementName=AddTeacherDialogWindow,Path=Teacher.Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            </TextBox>
+        </StackPanel>
+    </DockPanel>
+</Window>

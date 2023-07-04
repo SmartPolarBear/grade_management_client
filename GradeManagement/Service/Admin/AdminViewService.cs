@@ -20,4 +20,18 @@ public sealed class AdminViewService
         var dialog = new ChangePasswordDialog(_admin);
         dialog.ShowDialog();
     }
+
+    public Student? ShowAddStudentDialog()
+    {
+        var dialog = new AddStudentDialog();
+        dialog.ShowDialog();
+        return dialog.DialogResult == true ? dialog.Student : null;
+    }
+
+    public Teacher? ShowAddTeacherDialog()
+    {
+        var dialog = new AddTeacherDialog();
+        dialog.ShowDialog();
+        return dialog.DialogResult == true ? dialog.Teacher : null;
+    }
 }
