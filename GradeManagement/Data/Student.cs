@@ -2,11 +2,7 @@ using System;
 
 namespace GradeManagement.Data;
 
-public enum Gender
-{
-    Female,
-    Male
-}
+
 
 public record Student(int Id, object Data)
 {

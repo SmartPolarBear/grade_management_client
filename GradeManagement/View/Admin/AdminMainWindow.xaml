@@ -3,9 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:GradeManagement.ViewModel.Admin"
         xmlns:local="clr-namespace:GradeManagement.View.Admin"
+        xmlns:converters="clr-namespace:GradeManagement.Utils.Converter"
+        d:DataContext="{d:DesignInstance Type=vm:AdminMainViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Title="AdminMainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <converters:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
+        <converters:GenderDisplayNameConverter x:Key="GenderDisplayNameConverter"></converters:GenderDisplayNameConverter>
+    </Window.Resources>
+
     <DockPanel>
         <Menu
             DockPanel.Dock="Top">
@@ -14,37 +23,122 @@
                 <MenuItem Header="Add _Teacher"></MenuItem>
                 <MenuItem Header="Add _Student"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Exit"></MenuItem>
+                <MenuItem Header="Exit" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"></MenuItem>
             </MenuItem>
         </Menu>
-        
+
         <ToolBarTray
             DockPanel.Dock="Top">
             <ToolBar>
-                
+
             </ToolBar>
         </ToolBarTray>
-        
+
         <StatusBar
             DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock>AAA</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        
+
         <Grid>
             <TabControl>
                 <TabItem
                     Header="Courses">
-                    
+                    <Grid>
+                        <DataGrid
+                            IsReadOnly="True"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding Courses}"
+                            AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                <DataGridTextColumn Header="Term" Binding="{Binding Term}" />
+                                <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
+                                <DataGridTextColumn Header="Grading Method"
+                                                    Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                            </DataGrid.Columns>
+
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
+                                              CommandParameter="{Binding ElementName=FilterToolBar}">
+                                    </MenuItem>
+                                    <Separator></Separator>
+                                    <MenuItem Header="_Clear Filter" Command="{Binding Path=ClearCourseFilterCommand}">
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+
+                            <!-- <DataGrid.RowStyle> -->
+                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
+                            <!--         <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_MouseDoubleClick"></EventSetter> -->
+                            <!--         <Setter Property="ContextMenu"> -->
+                            <!--             <Setter.Value> -->
+                            <!--                 <ContextMenu> -->
+                            <!--                     <MenuItem Header="_Grade"></MenuItem> -->
+                            <!--                     <Separator></Separator> -->
+                            <!--                     <MenuItem Header="_Export"></MenuItem> -->
+                            <!--                 </ContextMenu> -->
+                            <!--             </Setter.Value> -->
+                            <!--         </Setter> -->
+                            <!--     </Style> -->
+                            <!-- </DataGrid.RowStyle> -->
+                        </DataGrid>
+                    </Grid>
                 </TabItem>
                 <TabItem
                     Header="Students">
-                    
+                    <Grid>
+                        <DataGrid
+                            IsReadOnly="True"
+                            SelectionMode="Single"
+
+                            ItemsSource="{Binding Students}"
+                            AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
+                                <DataGridTextColumn Header="Gender"
+                                                    Binding="{Binding Gender,Converter={StaticResource GenderDisplayNameConverter}}" />
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
+                            </DataGrid.Columns>
+
+                            <!-- <DataGrid.RowStyle> -->
+                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
+                            <!--         <EventSetter Event="MouseDoubleClick" Handler="StudentDataGrid_MouseDoubleClick"></EventSetter> -->
+                            <!--     </Style> -->
+                            <!-- </DataGrid.RowStyle> -->
+                        </DataGrid>
+                    </Grid>
                 </TabItem>
                 <TabItem
                     Header="Audit">
-                    
+                    <Grid>
+                        <DataGrid
+                            IsReadOnly="True"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding Audit}"
+                            AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Student" Binding="{Binding Student.Name}" />
+                                <DataGridTextColumn Header="Course" Binding="{Binding Course.Name}" />
+                                <DataGridTextColumn Header="Old Grade" Binding="{Binding OldScore}" />
+                                <DataGridTextColumn Header="New Grade" Binding="{Binding NewScore}" />
+                                <DataGridTextColumn Header="Modify Date" Binding="{Binding Date}" />
+                                <DataGridTextColumn Header="Grading Method"
+                                                    Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                            </DataGrid.Columns>
+
+                            <!-- <DataGrid.RowStyle> -->
+                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
+                            <!--         <EventSetter Event="MouseDoubleClick" Handler="StudentDataGrid_MouseDoubleClick"></EventSetter> -->
+                            <!--     </Style> -->
+                            <!-- </DataGrid.RowStyle> -->
+                        </DataGrid>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>
