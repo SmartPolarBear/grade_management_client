@@ -1,3 +1,4 @@
+using GradeManagement.Data.Model;
 using GradeManagement.View.Admin;
 
 namespace GradeManagement.Service.Admin;
@@ -34,4 +35,13 @@ public sealed class AdminViewService
         dialog.ShowDialog();
         return dialog.DialogResult == true ? dialog.Teacher : null;
     }
+
+    public Course? ShowAddCourseDialog()
+    {
+        var dialog = new AddCourseDialog();
+        dialog.ShowDialog();
+        return dialog.DialogResult == true ? dialog.Course : null;
+    }
+
+   
 }

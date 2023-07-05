@@ -13,13 +13,14 @@
     <Window.Resources>
         <converters:GradingMethodDisplayNameConverter x:Key="GradingMethodDisplayNameConverter" />
         <converters:GenderDisplayNameConverter x:Key="GenderDisplayNameConverter"></converters:GenderDisplayNameConverter>
+        <converters:NotNullBooleanConverter x:Key="NotNullBooleanConverter"></converters:NotNullBooleanConverter>
     </Window.Resources>
 
     <DockPanel>
         <Menu
             DockPanel.Dock="Top">
             <MenuItem Header="Data">
-                <MenuItem Header="Add _Course"></MenuItem>
+                <MenuItem Header="Add _Course" Command="{Binding AddCourseCommand}"></MenuItem>
                 <MenuItem Header="Add _Teacher" Command="{Binding AddTeacherCommand}"></MenuItem>
                 <MenuItem Header="Add _Student" Command="{Binding AddStudentCommand}"></MenuItem>
                 <Separator></Separator>
@@ -33,17 +34,10 @@
             </MenuItem>
         </Menu>
 
-        <ToolBarTray
-            DockPanel.Dock="Top">
-            <ToolBar>
-
-            </ToolBar>
-        </ToolBarTray>
-
         <StatusBar
             DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>AAA</TextBlock>
+                <TextBlock>Ready</TextBlock>
             </StatusBarItem>
         </StatusBar>
 
@@ -51,81 +45,127 @@
             <TabControl>
                 <TabItem
                     Header="Courses">
-                    <Grid>
+                    <DockPanel>
+                        <StackPanel
+                            Margin="4"
+                            DockPanel.Dock="Top"
+                            Orientation="Horizontal">
+                            <Button MinWidth="64"
+                                    Click="DeleteCourseButton_OnClick"
+                                    Name="DeleteCourseButton"
+                                    IsEnabled="{Binding ElementName=CourseDataGrid,Path=SelectedItem,Converter={StaticResource NotNullBooleanConverter}}">
+                                Delete
+                            </Button>
+                        </StackPanel>
                         <DataGrid
-                            IsReadOnly="True"
+                            IsReadOnly="False"
+                            Name="CourseDataGrid"
                             SelectionMode="Single"
                             ItemsSource="{Binding Courses}"
                             AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Term" Binding="{Binding Term}" />
-                                <DataGridTextColumn Header="Credit" Binding="{Binding Credit}" />
+                                <DataGridTextColumn Header="ID" Binding="{Binding Course.Id}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Course.Name}" />
+                                <DataGridTextColumn Header="Term" Binding="{Binding Course.Term}" />
+                                <DataGridTextColumn Header="Credit" Binding="{Binding Course.Credit}" />
                                 <DataGridTextColumn Header="Grading Method"
-                                                    Binding="{Binding  GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
+                                                    Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                             </DataGrid.Columns>
-
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="_Refresh" Command="{Binding Path=RefreshCommand}"
-                                              CommandParameter="{Binding ElementName=FilterToolBar}">
-                                    </MenuItem>
-                                    <Separator></Separator>
-                                    <MenuItem Header="_Clear Filter" Command="{Binding Path=ClearCourseFilterCommand}">
-                                    </MenuItem>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-
-                            <!-- <DataGrid.RowStyle> -->
-                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
-                            <!--         <EventSetter Event="MouseDoubleClick" Handler="MainDataGrid_MouseDoubleClick"></EventSetter> -->
-                            <!--         <Setter Property="ContextMenu"> -->
-                            <!--             <Setter.Value> -->
-                            <!--                 <ContextMenu> -->
-                            <!--                     <MenuItem Header="_Grade"></MenuItem> -->
-                            <!--                     <Separator></Separator> -->
-                            <!--                     <MenuItem Header="_Export"></MenuItem> -->
-                            <!--                 </ContextMenu> -->
-                            <!--             </Setter.Value> -->
-                            <!--         </Setter> -->
-                            <!--     </Style> -->
-                            <!-- </DataGrid.RowStyle> -->
                         </DataGrid>
-                    </Grid>
+                    </DockPanel>
                 </TabItem>
                 <TabItem
                     Header="Students">
+                    <DockPanel>
+                        <StackPanel
+                            Margin="4"
+                            DockPanel.Dock="Top"
+                            Orientation="Horizontal">
+                            <Button MinWidth="64"
+                                    Name="DeleteStudentButton"
+                                    Click="DeleteStudentButton_OnClick"
+                                    IsEnabled="{Binding ElementName=StudentDataGrid,Path=SelectedItem,Converter={StaticResource NotNullBooleanConverter}}">
+                                Delete
+                            </Button>
+                        </StackPanel>
+                        <DataGrid
+                            IsReadOnly="False"
+                            Name="StudentDataGrid"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding Students}"
+                            AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding  Student.Id}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Student.Name}" />
+                                <DataGridTextColumn Header="Age" Binding="{Binding Student.Age}" />
+                                <DataGridTextColumn Header="Gender"
+                                                    Binding="{Binding Student.Gender,Converter={StaticResource GenderDisplayNameConverter}}" />
+                                <DataGridTextColumn Header="Email" Binding="{Binding Student.Email}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+                <TabItem
+                    Header="Teachers">
+                    <DockPanel>
+                        <StackPanel
+                            Margin="4"
+                            DockPanel.Dock="Top"
+                            Orientation="Horizontal">
+                            <Button MinWidth="64"
+                                    Name="DeleteTeacherButton"
+                                    Click="DeleteTeacherButton_OnClick"
+                                    IsEnabled="{Binding ElementName=TeacherDataGrid,Path=SelectedItem,Converter={StaticResource NotNullBooleanConverter}}">
+                                Delete
+                            </Button>
+                        </StackPanel>
+                        <DataGrid
+                            Name="TeacherDataGrid"
+                            IsReadOnly="False"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding Teachers}"
+                            AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding  Teacher.Id}" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Teacher.Name}" />
+                                <DataGridTextColumn Header="Age" Binding="{Binding Teacher.Email}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Grades">
                     <Grid>
                         <DataGrid
                             IsReadOnly="True"
                             SelectionMode="Single"
-
-                            ItemsSource="{Binding Students}"
+                            ItemsSource="{Binding Grades}"
                             AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Age" Binding="{Binding Age}" />
-                                <DataGridTextColumn Header="Gender"
-                                                    Binding="{Binding Gender,Converter={StaticResource GenderDisplayNameConverter}}" />
-                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
+                                <DataGridTextColumn Header="Student" Binding="{Binding  Student.Name}" />
+                                <DataGridTextColumn Header="Course" Binding="{Binding Course.Name}" />
+                                <DataGridTextColumn Header="Grade" Binding="{Binding Score}" />
                             </DataGrid.Columns>
-
-                            <!-- <DataGrid.RowStyle> -->
-                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
-                            <!--         <EventSetter Event="MouseDoubleClick" Handler="StudentDataGrid_MouseDoubleClick"></EventSetter> -->
-                            <!--     </Style> -->
-                            <!-- </DataGrid.RowStyle> -->
                         </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem
                     Header="Audit">
-                    <Grid>
+                    <DockPanel>
+                        <StackPanel
+                            Margin="4"
+                            DockPanel.Dock="Top"
+                            Orientation="Horizontal">
+                            <Button MinWidth="64"
+                                    Click="RollbackAuditButton_OnClick"
+                                    Name="RollbackAuditButton"
+                                    IsEnabled="{Binding ElementName=AuditDataGrid,Path=SelectedItem,Converter={StaticResource NotNullBooleanConverter}}">
+                                Delete
+                            </Button>
+                        </StackPanel>
                         <DataGrid
                             IsReadOnly="True"
                             SelectionMode="Single"
+                            Name="AuditDataGrid"
                             ItemsSource="{Binding Audit}"
                             AutoGenerateColumns="False">
                             <DataGrid.Columns>
@@ -137,14 +177,8 @@
                                 <DataGridTextColumn Header="Grading Method"
                                                     Binding="{Binding  Course.GradingMethod,Converter={StaticResource GradingMethodDisplayNameConverter}}" />
                             </DataGrid.Columns>
-
-                            <!-- <DataGrid.RowStyle> -->
-                            <!--     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> -->
-                            <!--         <EventSetter Event="MouseDoubleClick" Handler="StudentDataGrid_MouseDoubleClick"></EventSetter> -->
-                            <!--     </Style> -->
-                            <!-- </DataGrid.RowStyle> -->
                         </DataGrid>
-                    </Grid>
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </Grid>

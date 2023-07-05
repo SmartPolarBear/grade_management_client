@@ -52,6 +52,48 @@ public sealed class AdminService
         return await _dbc.SaveChangesAsync() > 0;
     }
 
+    public void UpdateCourse(Course itemCourse)
+    {
+        _dbc.Entry(itemCourse).State = EntityState.Modified;
+        _dbc.SaveChanges();
+    }
+
+
+    public void UpdateStudent(Student itemStudent)
+    {
+        _dbc.Entry(itemStudent).State = EntityState.Modified;
+        _dbc.SaveChanges();
+    }
+
+    public void UpdateTeacher(Teacher itemTeacher)
+    {
+        _dbc.Entry(itemTeacher).State = EntityState.Modified;
+        _dbc.SaveChanges();
+    }
+
+
+    public void DeleteStudent(Student student)
+    {
+        _dbc.Students.Remove(student);
+        _dbc.SaveChanges();
+    }
+
+    public void DeleteTeacher(Teacher teacher)
+    {
+        _dbc.Teachers.Remove(teacher);
+        _dbc.SaveChanges();
+    }
+
+    public void DeleteCourse(Course course)
+    {
+        _dbc.Courses.Remove(course);
+        _dbc.SaveChanges();
+    }
+
+    public void RollbackAudit(Scaudit audit)
+    {
+        _dbc.Database.ExecuteSqlRaw("EXECUTE dbo.RollbackAudit @p0", audit.Id);
+    }
 
     public IEnumerable<Scaudit> Audits => _dbc.Scaudits;
 
@@ -60,4 +102,6 @@ public sealed class AdminService
     public IEnumerable<Student> Students => _dbc.Students;
 
     public IEnumerable<Teacher> Teachers => _dbc.Teachers;
+
+    public IEnumerable<Sc> Grades => _dbc.Scs;
 }

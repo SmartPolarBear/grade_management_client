@@ -5,8 +5,66 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GradeManagement.View.Admin"
         mc:Ignorable="d"
-        Title="AddCourseDialog" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        xmlns:validation="clr-namespace:GradeManagement.Utils.Validation"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        x:Name="AddStudentDialogWindow"
+        WindowStartupLocation="CenterOwner"
+        Title="Add Student" MinHeight="200" MinWidth="300">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <Separator Margin="8"></Separator>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="OkButton" IsDefault="True" Width="64" Margin="4" Click="OkButton_OnClick">OK</Button>
+                <Button Name="CancelButton" IsCancel="True" Width="64" Margin="4" Click="CancelButton_OnClick">Cancel</Button>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Margin="4">
+            <TextBlock>ID:</TextBlock>
+            <TextBox
+                Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                Style="{StaticResource ValidationTextBoxStyle}">
+                <TextBox.Text>
+                    <Binding ElementName="AddStudentDialogWindow" Path="Course.Id" Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:NumericIdValidationRule ValidateId="NumericIdValidationRule_OnValidateId"></validation:NumericIdValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Name:</TextBlock>
+            <TextBox
+                Text="{Binding ElementName=AddStudentDialogWindow,Path=Course.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            </TextBox>
+            <TextBlock>Term:</TextBlock>
+            <TextBox
+                Text="{Binding ElementName=AddStudentDialogWindow,Path=Course.Term,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            </TextBox>
+            <TextBlock>Credit:</TextBlock>
+            <TextBox
+                Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                Style="{StaticResource ValidationTextBoxStyle}">
+                <TextBox.Text>
+                    <Binding ElementName="AddStudentDialogWindow" Path="Course.Credit" Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:NumericValidationRule></validation:NumericValidationRule>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Grading Method:</TextBlock>
+            <ComboBox IsEditable="False"
+                      Name="GradingMethod"
+                      SelectionChanged="GradingMethod_OnSelectionChanged">
+                <ComboBoxItem>PF</ComboBoxItem>
+                <ComboBoxItem>ABCDEF</ComboBoxItem>
+                <ComboBoxItem>100-mark system</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+    </DockPanel>
 </Window>
